@@ -1,0 +1,27 @@
+{% extends "templates/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div>
+    <div style="text-align: center; max-width: 500px; margin: 4rem auto">
+        <p>
+            {{ my_user.date_joined }}
+        </p>
+        <p>
+            {{ my_user.username }}
+        </p>
+        {% if my_user == user %}
+                <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
+                    <p>
+                        회원정보 수정
+                    </p>
+                </a>
+                <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
+                    <p>
+                        회원탈퇴
+                    </p>
+                </a>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}
