@@ -7,21 +7,41 @@
         <p>
             {{ my_user.date_joined }}
         </p>
-        <p>
-            {{ my_user.username }}
-        </p>
+        
+        <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem;">
+
+        {% if my_user.profile %}
+            <h2>
+                {{ my_user.profile.nickname }}
+            </h2>
+            <h5 style="margin-bottom: 3rem;">
+                {{ my_user.profile.introduction }}
+            </h5>
+            <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
+                <p>
+                    프로필 수정
+                </p>
+            </a>
+        {% else %}
+            <a href="{% url 'profileapp:create' %}">
+                <h2>
+                    프로필 생성
+                </h2>
+            </a>
+        {% endif %}
+
         {% if my_user == user %}
-                <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
-                    <p>
-                        회원정보 수정
-                    </p>
-                </a>
-                <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
-                    <p>
-                        회원탈퇴
-                    </p>
-                </a>
-            {% endif %}
+            <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
+                <p>
+                    회원정보 수정
+                </p>
+            </a>
+            <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
+                <p>
+                    회원탈퇴
+                </p>
+            </a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
