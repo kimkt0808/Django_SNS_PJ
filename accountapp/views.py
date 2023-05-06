@@ -4,9 +4,11 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic.list import MultipleObjectMixin
 
 from accountapp.decorators import account_check
 from accountapp.forms import UserEditForm
+from feedapp.models import Feed
 
 
 def index(request):
@@ -20,11 +22,14 @@ class AccountSignupView(CreateView):
     template_name = "accountapp/signup.html"
 
 
-@method_decorator(account_check, "get")
-class AccountDetailView(DetailView):
+class AccountDetailView(DetailView, MultipleObjectMixin):
     model = User
     context_object_name = "my_user"
     template_name = "accountapp/detail.html"
+
+    def get_context_data(self, **kwargs):
+        my_feeds = Feed.objects.filter(writer=self.get_object())
+        return super(AccountDetailView, self).get_context_data(object_list=my_feeds, **kwargs)
 
 
 @method_decorator(account_check, "get")

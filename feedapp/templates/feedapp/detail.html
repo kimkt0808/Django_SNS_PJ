@@ -1,0 +1,30 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+<div>
+    <div style="text-align: center; max-width: 500px; margin: 4rem auto">
+        <p>
+            <img src="{{ my_feed.writer.profile.image.url }}" alt="image" style="height: 3rem; width: 3rem; border-radius: 15rem; object-fit: cover;">
+            <b> {{ my_feed.writer }} </b>
+            {{ my_feed.created_at }}
+        </p>
+
+        <img src="{{ my_feed.image.url }}" alt="image" style="margin-top: 2rem; margin-bottom: 2rem; width: 100%; border-radius: 1rem">
+
+        <h1>
+            {{ my_feed.title }}
+        </h1>
+        <p>
+            {{ my_feed.content }}
+        </p>
+        {% if my_feed.writer == user %}
+            <a href="{% url 'feedapp:edit' pk=my_feed.pk %}" class="btn btn-primary rounded-pill col-3">
+                게시글 수정
+            </a>
+            <a href="{% url 'feedapp:delete' pk=my_feed.pk %}" class="btn btn-danger rounded-pill col-3">
+                게시글 삭제
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

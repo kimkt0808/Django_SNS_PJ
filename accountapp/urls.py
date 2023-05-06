@@ -10,7 +10,7 @@ urlpatterns = [
     # index
     path("", views.index, name="index"),
 
-    # signup, detail, update, delete
+    # signup, detail, edit, delete
     path("signup/", AccountSignupView.as_view(), name="signup"),
     path("detail/<int:pk>/", AccountDetailView.as_view(), name="detail"),
     path("edit/<int:pk>/", AccountEditView.as_view(), name="edit"),

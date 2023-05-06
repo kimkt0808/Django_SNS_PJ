@@ -2,13 +2,32 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
+<style>
+    .container {
+        margin-top: 5rem;
+        padding: 0;
+        margin: 0, auto;
+    }
+
+    .container div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1rem;
+    }
+
+    .container img {
+        width: 17rem;
+        height: 17rem;
+        object-fit: cover;
+        border-radius: 1rem;
+    }
+</style>
+
 <div>
     <div style="text-align: center; max-width: 500px; margin: 4rem auto">
-        <p>
-            {{ my_user.date_joined }}
-        </p>
-        
-        <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem;">
+
+        <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem; object-fit: cover;">
 
         {% if my_user.profile %}
             <h2>
@@ -17,11 +36,6 @@
             <h5 style="margin-bottom: 3rem;">
                 {{ my_user.profile.introduction }}
             </h5>
-            <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
-                <p>
-                    프로필 수정
-                </p>
-            </a>
         {% else %}
             <a href="{% url 'profileapp:create' %}">
                 <h2>
@@ -31,6 +45,11 @@
         {% endif %}
 
         {% if my_user == user %}
+            <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
+                <p>
+                    프로필 수정
+                </p>
+            </a>
             <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
                 <p>
                     회원정보 수정
@@ -43,5 +62,20 @@
             </a>
         {% endif %}
     </div>
+
+    {% if object_list %}
+        <div class="container">
+            {% for list in object_list %}
+            <a href="{% url 'feedapp:detail' pk=list.pk %}">
+                {% include 'snippets/my_feeds.html' with my_feed_list=list %}
+            </a>
+            {% endfor %}
+        </div>
+        <script src="/static/js/magicgrid.js"></script>
+    {% else %}
+        <div class="text-center">
+            <h1>게시물 없음!!</h1>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
