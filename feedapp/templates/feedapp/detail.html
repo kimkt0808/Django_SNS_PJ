@@ -1,8 +1,41 @@
 {% extends "templates/base.html" %}
 
 {% block content %}
+<style>
+    .div {
+        width: 50%;
+        height: 300px;
+    }
+    .left {
+        float: left;
+        position: fixed;
+    }
+    .right {
+        float: right;
+        width: 400px;
+    }
+    .dropdown{
+        position : relative;
+        display : inline-block;
+    }
+
+    .dropdown-content{
+        z-index : 1;
+        display : none;
+        position : absolute;
+    }
+
+    .dropdown-content a{
+        display : block;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+
 <div>
-    <div style="text-align: center; max-width: 500px; margin: 4rem auto">
+    <div class="left" style="text-align: center; max-width: 500px; margin: 4rem auto; margin-left: 350px;">
         <p>
             <img src="{{ my_feed.writer.profile.image.url }}" alt="image" style="height: 3rem; width: 3rem; border-radius: 15rem; object-fit: cover;">
             <b> {{ my_feed.writer }} </b>
@@ -25,6 +58,13 @@
                 게시글 삭제
             </a>
         {% endif %}
+    </div>
+    <div class="right" style="margin-right: 350px;">
+        {% include "commentapp/create.html" with feed=my_feed %}
+
+        {% for comment in my_feed.comment.all %}
+            {% include "snippets/comment_list.html" with comment=comment %}
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

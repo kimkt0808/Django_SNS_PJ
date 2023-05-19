@@ -1,6 +1,8 @@
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
+from django.views.generic.edit import FormMixin
 
+from commentapp.forms import CommentCreateForm
 from feedapp.forms import FeedCreateForm
 from feedapp.models import Feed
 
@@ -21,8 +23,9 @@ class FeedCreateView(CreateView):
         return reverse("accountapp:detail", kwargs={"pk": self.object.writer.pk})
 
 
-class FeedDetailView(DetailView):
+class FeedDetailView(DetailView, FormMixin):
     model = Feed
+    form_class = CommentCreateForm
     context_object_name = "my_feed"
     template_name = "feedapp/detail.html"
 
