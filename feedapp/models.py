@@ -10,3 +10,5 @@ class Feed(models.Model):
     content = models.TextField(null=True)
 
     created_at = models.DateField(auto_now_add=True, null=True)
+
+    like_cnt = models.IntegerField(default=0)

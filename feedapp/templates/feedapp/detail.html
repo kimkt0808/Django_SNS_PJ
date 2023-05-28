@@ -34,6 +34,8 @@
     }
 </style>
 
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
 <div>
     <div class="left" style="text-align: center; max-width: 500px; margin: 4rem auto; margin-left: 350px;">
         <p>
@@ -47,6 +49,18 @@
         <h1>
             {{ my_feed.title }}
         </h1>
+        <div style="height: 2rem;">
+            <a href="{% url 'likeapp:like' pk=my_feed.pk %}" style="text-decoration: none">
+                <i style="vertical-align: middle; font-size: 1.2rem; color: #f77;" class="material-icons">
+                   favorite
+                </i>
+            </a>
+            <a href="{% url 'feedapp:like_list' pk=my_feed.pk %}" style="text-decoration: none">
+                <span style="vertical-align: middle; font-size: 1.2rem;">
+                   {{ my_feed.like_cnt }}
+                </span>
+            </a>
+        </div>
         <p>
             {{ my_feed.content }}
         </p>

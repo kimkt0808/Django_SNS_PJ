@@ -5,6 +5,7 @@ from django.views.generic.edit import FormMixin
 from commentapp.forms import CommentCreateForm
 from feedapp.forms import FeedCreateForm
 from feedapp.models import Feed
+from likeapp.models import Likes
 
 
 class FeedCreateView(CreateView):
@@ -51,3 +52,14 @@ class FeedListView(ListView):
     model = Feed
     context_object_name = "feed_list"
     template_name = "feedapp/list.html"
+
+
+class LikeListView(ListView):
+    model = Likes
+    context_object_name = "like_list"
+    template_name = "feedapp/like_list.html"
+
+    def get_context_data(self, **kwargs):
+        my_likes = Likes.objects.filter(feed=self.kwargs["pk"])
+
+        return super(LikeListView, self).get_context_data(object_list=my_likes, **kwargs)
