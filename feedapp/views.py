@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.views.generic.edit import FormMixin
@@ -29,6 +30,14 @@ class FeedDetailView(DetailView, FormMixin):
     form_class = CommentCreateForm
     context_object_name = "my_feed"
     template_name = "feedapp/detail.html"
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        feed = self.object
+
+        like_or_not = Likes.objects.filter(user=user, feed=feed)
+
+        return super(FeedDetailView, self).get_context_data(Feed=Feed, Likes=like_or_not, **kwargs)
 
 
 class FeedEditView(UpdateView):

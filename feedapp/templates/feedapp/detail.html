@@ -32,6 +32,10 @@
     .dropdown:hover .dropdown-content {
         display: block;
     }
+    a { color: black; }
+    a:visited { color: black; }
+    a:hover { color: black; }
+    a:active { color: black; }
 </style>
 
 <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
@@ -50,14 +54,22 @@
             {{ my_feed.title }}
         </h1>
         <div style="height: 2rem;">
-            <a href="{% url 'likeapp:like' pk=my_feed.pk %}" style="text-decoration: none">
-                <i style="vertical-align: middle; font-size: 1.2rem; color: #f77;" class="material-icons">
+            {% if Likes %}
+            <a href="{% url 'likeapp:like' pk=my_feed.pk %}" style="text-decoration: none" visited="color: black;">
+                <i style="vertical-align: middle; font-size: 1.7rem; color: #CD5C5C;" class="material-icons">
                    favorite
                 </i>
             </a>
+            {% else %}
+            <a href="{% url 'likeapp:like' pk=my_feed.pk %}" style="text-decoration: none">
+                <i style="vertical-align: middle; font-size: 1.7rem; color: #DBE4EB;" class="material-icons">
+                   favorite
+                </i>
+            </a>
+            {% endif %}
             <a href="{% url 'feedapp:like_list' pk=my_feed.pk %}" style="text-decoration: none">
-                <span style="vertical-align: middle; font-size: 1.2rem;">
-                   {{ my_feed.like_cnt }}
+                <span style="vertical-align: middle; font-size: 1.1rem;">
+                   좋아요 {{ my_feed.like_cnt }}개
                 </span>
             </a>
         </div>
