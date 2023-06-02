@@ -7,8 +7,6 @@ from profileapp.forms import ProfileCreateForm, ProfileEditForm
 from profileapp.models import Profile
 
 
-@method_decorator(profile_check, "get")
-@method_decorator(profile_check, "post")
 class ProfileCreateView(CreateView):
     model = Profile
     form_class = ProfileCreateForm
