@@ -2,13 +2,18 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
 from accountapp import views
-from accountapp.views import AccountSignupView, AccountDetailView, AccountEditView, AccountDeleteView
+from accountapp.views import AccountSignupView, AccountDetailView, AccountEditView, AccountDeleteView, FollowerListView, \
+    FollowListView
 
 app_name = "accountapp"
 
 urlpatterns = [
     # index
     path("", views.index, name="index"),
+
+    # follow
+    path("<int:pk>/follower_list/", FollowerListView.as_view(), name="follower_list"),
+    path("<int:pk>/follow_list/", FollowListView.as_view(), name="follow_list"),
 
     # signup, detail, edit, delete
     path("signup/", AccountSignupView.as_view(), name="signup"),

@@ -22,6 +22,10 @@
         object-fit: cover;
         border-radius: 1rem;
     }
+    .follow a { color: black; }
+    .follow a:visited { color: black; }
+    .follow a:hover { color: black; }
+    .follow a:active { color: black; }
 </style>
 
 <div>
@@ -36,6 +40,23 @@
             <h5 style="margin-bottom: 3rem;">
                 {{ my_user.profile.introduction }}
             </h5>
+            {% if my_user == user %}
+                <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
+                    <p>
+                        프로필 수정
+                    </p>
+                </a>
+                <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
+                    <p>
+                        회원정보 수정
+                    </p>
+                </a>
+                <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
+                    <p>
+                        회원탈퇴
+                    </p>
+                </a>
+            {% endif %}
         {% else %}
             <a href="{% url 'profileapp:create' %}">
                 <h2>
@@ -44,23 +65,28 @@
             </a>
         {% endif %}
 
-        {% if my_user == user %}
-            <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
-                <p>
-                    프로필 수정
-                </p>
-            </a>
-            <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
-                <p>
-                    회원정보 수정
-                </p>
-            </a>
-            <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
-                <p>
-                    회원탈퇴
-                </p>
-            </a>
+        <div class="text-center">
+        {% if my_user != user %}
+            {% if follow %}
+                <a href="{% url 'followapp:follow' pk=my_user.pk %}" class="btn btn-danger rounded-pill px-4" style="text-decoration: none">팔로우 취소</a>
+            {% else %}
+                <a href="{% url 'followapp:follow' pk=my_user.pk %}" class="btn btn-primary rounded-pill px-4" style="text-decoration: none">팔로우</a>
+            {% endif %}
         {% endif %}
+        </div>
+    </div>
+
+    <div class="text-center follow" style="margin-bottom: 30px;">
+        <a href="{% url 'accountapp:follower_list' pk=my_user.pk %}" style="text-decoration: none">
+            <span style="vertical-align: middle; font-size: 1.1rem;">
+               팔로워 {{ followers_cnt }}명
+            </span>
+        </a>
+        <a href="{% url 'accountapp:follow_list' pk=my_user.pk %}" style="text-decoration: none">
+            <span style="vertical-align: middle; font-size: 1.1rem;">
+               팔로우 {{ follow_cnt }}명
+            </span>
+        </a>
     </div>
 
     {% if object_list %}
