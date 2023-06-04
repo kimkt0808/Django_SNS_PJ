@@ -6,7 +6,7 @@ app_name = "feedapp"
 
 urlpatterns = [
     # list
-    path("list/", FeedListView.as_view(), name="list"),
+    path("", FeedListView.as_view(), name="list"),
     path("<int:pk>/like_list/", LikeListView.as_view(), name="like_list"),
 
     # create, detail, edit, delete

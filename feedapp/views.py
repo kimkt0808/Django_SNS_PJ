@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.views.generic.edit import FormMixin
@@ -53,7 +52,7 @@ class FeedEditView(UpdateView):
 class FeedDeleteView(DeleteView):
     model = Feed
     context_object_name = "my_feed"
-    success_url = reverse_lazy("accountapp:index")
+    success_url = reverse_lazy("feedapp:list")
     template_name = "feedapp/delete.html"
 
 

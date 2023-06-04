@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
@@ -10,10 +9,6 @@ from accountapp.decorators import account_check
 from accountapp.forms import UserEditForm
 from feedapp.models import Feed
 from followapp.models import Follow
-
-
-def index(request):
-    return HttpResponse("Hello World!")
 
 
 class AccountSignupView(CreateView):
