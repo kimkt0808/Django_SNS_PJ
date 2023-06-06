@@ -58,8 +58,12 @@ class FeedDeleteView(DeleteView):
 
 class FeedListView(ListView):
     model = Feed
-    context_object_name = "feed_list"
     template_name = "feedapp/list.html"
+
+    def get_context_data(self, **kwargs):
+        shuffle = Feed.objects.order_by("?")
+
+        return super(FeedListView, self).get_context_data(object_list=shuffle, **kwargs)
 
 
 class LikeListView(ListView):

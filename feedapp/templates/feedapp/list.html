@@ -23,9 +23,9 @@
     }
 </style>
 
-{% if feed_list %}
+{% if object_list %}
     <div class="container">
-        {% for list in feed_list %}
+        {% for list in object_list %}
         <a href="{% url 'feedapp:detail' pk=list.pk %}">
             {% include 'snippets/feed_list.html' with feed_list=list %}
         </a>
