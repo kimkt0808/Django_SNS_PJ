@@ -1,8 +1,10 @@
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.views.generic.edit import FormMixin
 
 from commentapp.forms import CommentCreateForm
+from feedapp.decorators import account_check
 from feedapp.forms import FeedCreateForm
 from feedapp.models import Feed
 from likeapp.models import Likes
@@ -37,6 +39,8 @@ class FeedDetailView(DetailView, FormMixin):
         return super(FeedDetailView, self).get_context_data(Feed=Feed, Likes=like_or_not, **kwargs)
 
 
+@method_decorator(account_check, "get")
+@method_decorator(account_check, "post")
 class FeedEditView(UpdateView):
     model = Feed
     context_object_name = "my_feed"
@@ -47,6 +51,8 @@ class FeedEditView(UpdateView):
         return reverse("feedapp:detail", kwargs={"pk": self.object.pk})
 
 
+@method_decorator(account_check, "get")
+@method_decorator(account_check, "post")
 class FeedDeleteView(DeleteView):
     model = Feed
     context_object_name = "my_feed"

@@ -1,13 +1,13 @@
 from django.http import HttpResponseForbidden
 
-from profileapp.models import Profile
+from feedapp.models import Feed
 
 
 def account_check(func):
     def decorated(request, *args, **kwargs):
-        profile = Profile.objects.get(pk=kwargs["pk"])
+        feed = Feed.objects.get(pk=kwargs["pk"])
 
-        if not profile.user == request.user:
+        if not feed.writer == request.user:
             return HttpResponseForbidden()
 
         return func(request, *args, **kwargs)
