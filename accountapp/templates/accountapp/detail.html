@@ -98,6 +98,9 @@
                         프로필 생성
                     </h2>
                 </a>
+                <a class="btn btn-danger rounded-pill px-4;" href="{% url 'accountapp:delete' pk=my_user.pk %}">
+                    회원탈퇴
+                </a>
             {% endif %}
         {% endif %}
 
