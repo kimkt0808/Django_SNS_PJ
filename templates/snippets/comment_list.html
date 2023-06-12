@@ -5,7 +5,9 @@
         </strong>
         {% if comment.writer == user %}
             <div class="dropdown" style="float: right; margin: 0.3rem;">
-                <span class="dropbtn">설정</span>
+            <i style="vertical-align: right; font-size: 1.7rem;" class="material-icons">
+               more_vert
+            </i>
                 <div class="dropdown-content">
                     <a href="{% url 'commentapp:edit' pk=comment.pk %}" style="color: blue; text-decoration: none;">
                         수정

@@ -1,20 +1,18 @@
-{% extends "templates/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <style>
     .container {
-        margin-top: 5rem;
+        margin-top: 3rem;
         padding: 0;
         margin: 0, auto;
     }
-
     .container div {
         display: flex;
         justify-content: center;
         align-items: center;
         border-radius: 1rem;
     }
-
     .container img {
         width: 17rem;
         height: 17rem;
@@ -22,6 +20,16 @@
         border-radius: 1rem;
     }
 </style>
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<div style="text-align: center; margin-top: 7rem;">
+    <a href="{% url 'feedapp:create' %}">
+        <i class="material-icons" style="vertical-align: right; font-size: 4rem; color: #2a9df4;">
+            add_circle
+        </i>
+    </a>
+</div>
 
 {% if object_list %}
     <div class="container">
@@ -33,7 +41,7 @@
     </div>
     <script src="/static/js/magicgrid.js"></script>
 {% else %}
-    <div class="text-center">
+    <div class="text-center" style="margin-top: 3rem;">
         <h1>게시물 없음!!</h1>
     </div>
 {% endif %}

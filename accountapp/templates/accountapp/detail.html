@@ -1,26 +1,41 @@
-{% extends "templates/base.html" %}
+{% extends "base.html" %}
 {% load django_bootstrap5 %}
 
 {% block content %}
 <style>
     .container {
-        margin-top: 5rem;
+        margin-top: 3rem;
         padding: 0;
         margin: 0, auto;
     }
-
     .container div {
         display: flex;
         justify-content: center;
         align-items: center;
         border-radius: 1rem;
     }
-
     .container img {
         width: 17rem;
         height: 17rem;
         object-fit: cover;
         border-radius: 1rem;
+    }
+    .dropdown{
+        position : relative;
+        bottom: 4rem;
+        display : inline-block;
+    }
+    .dropdown-content{
+        z-index : 1;
+        display : none;
+        position : absolute;
+        min-width: 120px;
+    }
+    .dropdown-content a{
+        display : block;
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
     }
     .follow a { color: black; }
     .follow a:visited { color: black; }
@@ -28,10 +43,39 @@
     .follow a:active { color: black; }
 </style>
 
-<div>
-    <div style="text-align: center; max-width: 500px; margin: 4rem auto">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
 
-        <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem; object-fit: cover;">
+<div>
+    <div style="text-align: center; margin: 3rem auto">
+        {% if my_user == user %}
+            <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem; margin-top: 3rem; margin-left: 2.5rem; object-fit: cover;">
+        {% else %}
+            <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem; margin-top: 3rem; object-fit: cover;">
+        {% endif %}
+        {% if my_user == user %}
+            <div class="dropdown" style="margin: 0.3rem;">
+            <i style="vertical-align: right; font-size: 1.7rem;" class="material-icons">
+                   more_vert
+            </i>
+                <div class="dropdown-content" style="font-size: 15px;">
+                    <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
+                        <p>
+                            프로필 수정
+                        </p>
+                    </a>
+                    <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
+                        <p>
+                            회원정보 수정
+                        </p>
+                    </a>
+                    <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
+                        <p>
+                            회원탈퇴
+                        </p>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
 
         {% if my_user.profile %}
             <h2>
@@ -40,23 +84,6 @@
             <h5 style="margin-bottom: 3rem;">
                 {{ my_user.profile.introduction }}
             </h5>
-            {% if my_user == user %}
-                <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
-                    <p>
-                        프로필 수정
-                    </p>
-                </a>
-                <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
-                    <p>
-                        회원정보 수정
-                    </p>
-                </a>
-                <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
-                    <p>
-                        회원탈퇴
-                    </p>
-                </a>
-            {% endif %}
         {% else %}
             <a href="{% url 'profileapp:create' %}">
                 <h2>
@@ -76,32 +103,33 @@
         </div>
     </div>
 
-    <div class="text-center follow" style="margin-bottom: 30px;">
+    <div class="text-center follow">
         <a href="{% url 'accountapp:follower_list' pk=my_user.pk %}" style="text-decoration: none">
             <span style="vertical-align: middle; font-size: 1.1rem;">
                팔로워 {{ followers_cnt }}명
             </span>
         </a>
+        &nbsp;
         <a href="{% url 'accountapp:follow_list' pk=my_user.pk %}" style="text-decoration: none">
             <span style="vertical-align: middle; font-size: 1.1rem;">
                팔로우 {{ follow_cnt }}명
             </span>
         </a>
     </div>
-
-    {% if object_list %}
-        <div class="container">
-            {% for list in object_list %}
-            <a href="{% url 'feedapp:detail' pk=list.pk %}">
-                {% include 'snippets/my_feeds.html' with my_feed_list=list %}
-            </a>
-            {% endfor %}
-        </div>
-        <script src="/static/js/magicgrid.js"></script>
-    {% else %}
-        <div class="text-center">
-            <h1>게시물 없음!!</h1>
-        </div>
-    {% endif %}
 </div>
+
+{% if object_list %}
+    <div class="container">
+        {% for list in object_list %}
+        <a href="{% url 'feedapp:detail' pk=list.pk %}">
+            {% include 'snippets/my_feeds.html' with my_feed_list=list %}
+        </a>
+        {% endfor %}
+    </div>
+    <script src="/static/js/magicgrid.js"></script>
+{% else %}
+    <div class="text-center">
+        <h1>게시물 없음!!</h1>
+    </div>
+{% endif %}
 {% endblock %}

@@ -11,6 +11,7 @@ from likeapp.models import Likes
 class FeedCreateView(CreateView):
     model = Feed
     form_class = FeedCreateForm
+    success_url = reverse_lazy("feedapp:list")
     template_name = "feedapp/create.html"
 
     def form_valid(self, form):
@@ -19,9 +20,6 @@ class FeedCreateView(CreateView):
         feed.save()
 
         return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("accountapp:detail", kwargs={"pk": self.object.writer.pk})
 
 
 class FeedDetailView(DetailView, FormMixin):
