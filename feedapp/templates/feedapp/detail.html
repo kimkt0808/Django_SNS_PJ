@@ -44,12 +44,22 @@
     <div class="left" style="text-align: center; max-width: 500px; margin: 4rem auto; margin-left: 350px;">
         <p>
             <div>
-            <img src="{{ my_feed.writer.profile.image.url }}" alt="image" style="height: 3rem; width: 3rem; border-radius: 15rem; object-fit: cover;">
-            <b>
-                <a href="{% url 'accountapp:detail' pk=my_feed.writer.pk %}">
-                    {{ my_feed.writer.profile.nickname }}
-                </a>
-            </b>
+            {% if not my_feed.writer.profile.image.url %}
+                <img style="height: 3rem; width: 3rem; border-radius: 15rem; object-fit: cover;">
+                <b>
+                    <a href="{% url 'accountapp:detail' pk=my_feed.writer.pk %}">
+                        닉네임 없음
+                    </a>
+                </b>
+            {% else %}
+                <img src="{{ my_feed.writer.profile.image.url }}" alt="image" style="height: 3rem; width: 3rem; border-radius: 15rem; object-fit: cover;">
+                <b>
+                    <a href="{% url 'accountapp:detail' pk=my_feed.writer.pk %}">
+                        {{ my_feed.writer.profile.nickname }}
+                    </a>
+                </b>
+            {% endif %}
+
             {{ my_feed.created_at }}
 
             {% if my_feed.writer == user %}

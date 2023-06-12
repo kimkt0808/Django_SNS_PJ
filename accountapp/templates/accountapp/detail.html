@@ -48,48 +48,57 @@
 <div>
     <div style="text-align: center; margin: 3rem auto">
         {% if my_user == user %}
-            <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem; margin-top: 3rem; margin-left: 2.5rem; object-fit: cover;">
+            {% if not my_user.profile.image.url %}
+                <img style="margin-top: 3rem; margin-bottom: 2rem; margin-right: 0.3rem; height: 12rem; width: 12rem; border-radius: 15rem; object-fit: cover;">
+            {% else %}
+                <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem; margin-top: 3rem; margin-left: 2.5rem; object-fit: cover;">
+            {% endif %}
         {% else %}
-            <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem; margin-top: 3rem; object-fit: cover;">
-        {% endif %}
-        {% if my_user == user %}
-            <div class="dropdown" style="margin: 0.3rem;">
-            <i style="vertical-align: right; font-size: 1.7rem;" class="material-icons">
-                   more_vert
-            </i>
-                <div class="dropdown-content" style="font-size: 15px;">
-                    <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
-                        <p>
-                            프로필 수정
-                        </p>
-                    </a>
-                    <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
-                        <p>
-                            회원정보 수정
-                        </p>
-                    </a>
-                    <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
-                        <p>
-                            회원탈퇴
-                        </p>
-                    </a>
-                </div>
-            </div>
+            {% if not my_user.profile.image.url %}
+                <img style="margin-top: 3rem; margin-bottom: 2rem; margin-right: 0.3rem; height: 12rem; width: 12rem; border-radius: 15rem; object-fit: cover;">
+            {% else %}
+                <img src="{{ my_user.profile.image.url }}" alt="image" style="height: 12rem; width: 12rem; border-radius: 15rem; margin-bottom: 2rem; margin-top: 3rem; object-fit: cover;">
+            {% endif %}
         {% endif %}
 
-        {% if my_user.profile %}
-            <h2>
-                {{ my_user.profile.nickname }}
-            </h2>
-            <h5 style="margin-bottom: 3rem;">
-                {{ my_user.profile.introduction }}
-            </h5>
-        {% else %}
-            <a href="{% url 'profileapp:create' %}">
+        {% if my_user == user %}
+            {% if my_user.profile %}
+                <div class="dropdown" style="margin: 0.3rem;">
+                <i style="vertical-align: right; font-size: 1.7rem;" class="material-icons">
+                       more_vert
+                </i>
+                    <div class="dropdown-content" style="font-size: 15px;">
+                        <a href="{% url 'profileapp:edit' pk=my_user.profile.pk %}">
+                            <p>
+                                프로필 수정
+                            </p>
+                        </a>
+                        <a href="{% url 'accountapp:edit' pk=my_user.pk %}">
+                            <p>
+                                회원정보 수정
+                            </p>
+                        </a>
+                        <a href="{% url 'accountapp:delete' pk=my_user.pk %}">
+                            <p>
+                                회원탈퇴
+                            </p>
+                        </a>
+                    </div>
+                </div>
+
                 <h2>
-                    프로필 생성
+                    {{ my_user.profile.nickname }}
                 </h2>
-            </a>
+                <h5 style="margin-bottom: 3rem;">
+                    {{ my_user.profile.introduction }}
+                </h5>
+            {% else %}
+                <a href="{% url 'profileapp:create' %}">
+                    <h2>
+                        프로필 생성
+                    </h2>
+                </a>
+            {% endif %}
         {% endif %}
 
         <div class="text-center">
@@ -128,7 +137,7 @@
     </div>
     <script src="/static/js/magicgrid.js"></script>
 {% else %}
-    <div class="text-center">
+    <div class="text-center" style="margin-top: 3rem;">
         <h1>게시물 없음!!</h1>
     </div>
 {% endif %}

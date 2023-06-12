@@ -1,8 +1,14 @@
 <div style="border: 1px solid; text-align: left; padding: 4%; margin: 1rem 0; border-radius: 1rem; border-color: #bbb;">
     <div>
-        <strong style="font-size: 25px">
-            {{ comment.writer.profile.nickname }}
-        </strong>
+        {% if comment.writer.profile.nickname %}
+            <strong style="font-size: 25px">
+                {{ comment.writer.profile.nickname }}
+            </strong>
+        {% else %}
+            <strong style="font-size: 25px">
+                닉네임 없음
+            </strong>
+        {% endif %}
         {% if comment.writer == user %}
             <div class="dropdown" style="float: right; margin: 0.3rem;">
             <i style="vertical-align: right; font-size: 1.7rem;" class="material-icons">
