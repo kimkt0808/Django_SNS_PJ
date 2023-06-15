@@ -107,9 +107,9 @@
         <div class="text-center">
         {% if my_user != user %}
             {% if follow %}
-                <a href="{% url 'followapp:follow' pk=my_user.pk %}" class="btn btn-danger rounded-pill px-4" style="text-decoration: none">팔로우 취소</a>
+                <a href="{% url 'followapp:follow' pk=my_user.pk %}" class="btn btn-danger rounded-pill px-4 text-white" style="text-decoration: none">팔로우 취소</a>
             {% else %}
-                <a href="{% url 'followapp:follow' pk=my_user.pk %}" class="btn btn-primary rounded-pill px-4" style="text-decoration: none">팔로우</a>
+                <a href="{% url 'followapp:follow' pk=my_user.pk %}" class="btn btn-primary rounded-pill px-4 text-white" style="text-decoration: none">팔로우</a>
             {% endif %}
         {% endif %}
         </div>
