@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -18,7 +19,11 @@ class FollowView(RedirectView):
 
         if follow.exists():
             follow.delete()
+
+            messages.add_message(self.request, messages.ERROR, "팔로우가 취소되었습니다.")
         else:
             Follow(user=user, follow_user=target_user).save()
+
+            messages.add_message(self.request, messages.ERROR, f"{target_user}님을 팔로우 합니다.")
 
         return super(FollowView, self).get(request, *args, **kwargs)

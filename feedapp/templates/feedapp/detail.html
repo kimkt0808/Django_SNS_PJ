@@ -2,6 +2,11 @@
 
 {% block content %}
 <style>
+    .alert {
+        position: fixed;
+        width: 100%;
+        text-align: center;
+    }
     .div {
         width: 50%;
         height: 300px;
@@ -39,6 +44,12 @@
 </style>
 
 <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert"></div>
+    {% endfor %}
+{% endif %}
 
 <div style="margin-top: 3rem;">
     <div class="left" style="text-align: center; max-width: 500px; margin: 4rem auto; margin-left: 350px;">
