@@ -22,7 +22,7 @@ class LikeFeedView(RedirectView):
             feed.like_cnt -= 1
             feed.save()
 
-            messages.add_message(self.request, messages.ERROR, "좋아요가 취소되었습니다.")
+            messages.error(self.request, "좋아요가 취소되었습니다.")
 
             return HttpResponseRedirect(reverse("feedapp:detail", kwargs={"pk": kwargs["pk"]}))
         else:
@@ -31,6 +31,6 @@ class LikeFeedView(RedirectView):
             feed.like_cnt += 1
             feed.save()
 
-            messages.add_message(self.request, messages.SUCCESS, "좋아요가 반영되었습니다.")
+            messages.success(self.request, "좋아요가 반영되었습니다.")
         
         return super(LikeFeedView, self).get(self.request, *args, **kwargs)
