@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if object_list %}
+    <table style="margin: auto; margin-top: 5rem; width: 20%; height: 100%;">
+        <thead>
+        <tr>
+            <th class="text-center">검색<hr></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for list in object_list %}
+            <tr>
+                <td>
+                    <span style="float: left;">
+                        {% if list.profile.image %}
+                        <img src="{{ list.profile.image.url }}" alt="image" style="margin: auto; margin-bottom: 0.5rem; margin-right: 0.3rem; height: 3rem; width: 3rem; border-radius: 15rem; object-fit: cover;">
+                        <a href="{% url 'accountapp:detail' pk=list.pk %}">
+                            {{ list.profile.nickname }}({{ list.username }})
+                        </a>
+                        {% else %}
+                        <img style="margin: auto; margin-bottom: 0.5rem; margin-right: 0.3rem; height: 3rem; width: 3rem; border-radius: 15rem; object-fit: cover;">
+                        <a href="{% url 'accountapp:detail' pk=list.pk %}">
+                            닉네임 없음({{ list.username }})
+                        </a>
+                        {% endif %}
+                    </span>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <table style="margin: auto; margin-top: 5rem; width: 30%; height: 100px;">
+        <thead>
+        <tr>
+            <th class="text-center">검색<hr></th>
+        </tr>
+        </thead>
+
+        <tbody align="center">
+            <tr>
+                <td>
+                    <span>
+                        해당 유저가 존재하지 않습니다ㅠ
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
