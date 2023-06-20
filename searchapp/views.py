@@ -7,8 +7,11 @@ class SearchListView(ListView):
     template_name = "searchapp/search_list.html"
 
     def get_queryset(self, *args, **kwargs):
-        q = self.request.GET.get("q", "")
+        q = self.request.GET.get("q", None)
 
-        object_list = User.objects.filter(username__icontains=q)
+        if q:
+            object_list = User.objects.filter(username__icontains=q)
+        else:
+            object_list = User.objects.none()
 
         return object_list
