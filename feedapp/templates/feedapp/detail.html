@@ -27,7 +27,7 @@
         z-index : 1;
         display : none;
         position : absolute;
-        min-width: 110px;
+        min-width: 60px;
     }
 
     .dropdown-content a{
@@ -71,7 +71,7 @@
                 </b>
             {% endif %}
 
-            {{ my_feed.created_at }}
+            {{ my_feed.created_at | date:"Y-m-d" }}
 
             {% if my_feed.writer == user %}
                 <div class="dropdown" style="float: right; margin-top: 0.65rem;">
@@ -80,10 +80,10 @@
                 </i>
                     <div class="dropdown-content" style="font-size: 15px;">
                         <a href="{% url 'feedapp:edit' pk=my_feed.pk %}">
-                            게시글 수정
+                            수정
                         </a>
                         <a href="{% url 'feedapp:delete' pk=my_feed.pk %}">
-                            게시글 삭제
+                            삭제
                         </a>
                     </div>
                 </div>

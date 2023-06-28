@@ -26,7 +26,7 @@
         {% endif %}
     </div>
     <div style="font-size: 10px">
-        {{ comment.created_at }}
+        {{ comment.created_at | date:"Y-m-d" }}
     </div>
     <div style="margin: 1.3rem 0;">
         {{ comment.content }}

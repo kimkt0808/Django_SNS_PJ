@@ -4,7 +4,7 @@
 
     <div style="text-align: center; max-width: 500px; margin: 4rem auto; margin-top: 7rem;">
         <div class="mb-4">
-            <h4>회원 탈퇴</h4>
+            <h4>계정을 삭제하시겠습니까?</h4>
         </div>
         <form action="{% url 'accountapp:delete' pk=my_user.pk %}" method="post">
             {% csrf_token %}
