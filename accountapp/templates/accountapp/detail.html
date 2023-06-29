@@ -101,7 +101,7 @@
                     {{ my_user.profile.nickname }}
                 </h2>
                 <h5 style="margin-bottom: 3rem;">
-                    {{ my_user.profile.introduction }}
+                    {{ my_user.profile.introduction | safe }}
                 </h5>
             {% else %}
                 <a href="{% url 'profileapp:create' %}">

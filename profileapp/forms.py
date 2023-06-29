@@ -10,7 +10,7 @@ class ProfileCreateForm(ModelForm):
     introduction = forms.CharField(widget=forms.Textarea(attrs={"class": "editable text-start",
                                                                 "style": "height: auto;"}), label="소개")
     email = forms.EmailField(label="이메일")
-    sex = forms.CharField(label="성별")
+    sex = forms.ChoiceField(label="성별", choices=Profile.SEX_CHOICES)
 
     class Meta:
         model = Profile
@@ -23,7 +23,7 @@ class ProfileEditForm(ModelForm):
     introduction = forms.CharField(widget=forms.Textarea(attrs={"class": "editable text-start",
                                                                 "style": "height: auto;"}), label="소개")
     email = forms.EmailField(label="이메일")
-    sex = forms.CharField(label="성별")
+    sex = forms.ChoiceField(label="성별", choices=Profile.SEX_CHOICES)
 
     class Meta:
         model = Profile
