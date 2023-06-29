@@ -2,7 +2,10 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-<div style="text-align: center; max-width: 500px; margin: 4rem auto">
+<script src="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/js/medium-editor.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
+
+<div style="text-align: center; max-width: 500px; margin: 4rem auto; margin-top: 7rem;">
     <div class="mb-4">
         <h4>새 피드 만들기</h4>
     </div>
@@ -12,4 +15,12 @@
         <input type="submit" class="btn btn-primary">
     </form>
 </div>
+
+<script>
+var editor = new MediumEditor('.editable', {
+    placeholder: {
+        text: "내용을 입력해주세요."
+    }
+});
+</script>
 {% endblock %}

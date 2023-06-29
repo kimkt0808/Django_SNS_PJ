@@ -115,10 +115,10 @@
         </div>
 
         <h1>
-            {{ my_feed.title }}
+            {{ my_feed.title | safe }}
         </h1>
         <p>
-            {{ my_feed.content }}
+            {{ my_feed.content | safe }}
         </p>
     </div>
     <div class="right" style="margin-right: 350px;">

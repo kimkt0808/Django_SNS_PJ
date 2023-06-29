@@ -5,14 +5,14 @@ from django.views.generic.edit import FormMixin
 
 from commentapp.forms import CommentCreateForm
 from feedapp.decorators import account_check
-from feedapp.forms import FeedCreateForm
+from feedapp.forms import FeedForm
 from feedapp.models import Feed
 from likeapp.models import Likes
 
 
 class FeedCreateView(CreateView):
     model = Feed
-    form_class = FeedCreateForm
+    form_class = FeedForm
     success_url = reverse_lazy("feedapp:list")
     template_name = "feedapp/create.html"
 
@@ -44,7 +44,7 @@ class FeedDetailView(DetailView, FormMixin):
 class FeedEditView(UpdateView):
     model = Feed
     context_object_name = "my_feed"
-    form_class = FeedCreateForm
+    form_class = FeedForm
     template_name = "feedapp/update.html"
 
     def get_success_url(self):

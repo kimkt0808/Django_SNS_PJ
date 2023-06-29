@@ -1,6 +1,9 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
+<script src="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/js/medium-editor.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
+
 <div style="text-align: center; max-width: 500px; margin: 4rem auto">
     <form action="{% url 'commentapp:create' %}" method="post">
         {% csrf_token %}
@@ -17,4 +20,12 @@
         <input type="hidden" name="feed_pk" value="{{ feed.pk }}">
     </form>
 </div>
+
+<script>
+var editor = new MediumEditor('.editable', {
+    placeholder: {
+        text: "내용을 입력해주세요."
+    }
+});
+</script>
 {% endblock %}
