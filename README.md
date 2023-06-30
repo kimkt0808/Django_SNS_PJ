@@ -6,10 +6,10 @@ Django로 구현한 SNS Project
 # 프로젝트 개요
 * 프로젝트 명 : Django_SNS_PJ
 * 개발 인원 : 1명
-* 개발 기간 : 
-* 개발 언어 : Python
-* 개발 환경 : Django
-* DB : PostgreSQL
+* 개발 기간 : 2023.04 ~ 2023.06
+* 개발 언어 : Python 3.10
+* 개발 환경 : Django 4.2
+* DB : MariaDB
 * 버전 관리 : git&github
 
 <br>
@@ -83,7 +83,7 @@ Django로 구현한 SNS Project
 <img width="800" alt="home" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/bdfe1606-17b8-4c4d-8665-07004a7f53ab">
 
 ### 2. 로그인
-<img width="300" alt="login" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5181fc68-c07c-4cf4-bea4-af991b64b6a3">
+<img width="400" alt="login" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5181fc68-c07c-4cf4-bea4-af991b64b6a3">
 
 ### 3. 피드
 <img width="846" alt="feed_detail" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/b398413c-0cd5-429a-8ed9-80aa6d9e5def">
@@ -92,7 +92,7 @@ Django로 구현한 SNS Project
 <img width="1069" alt="user_detail" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/51d63521-72bb-483d-aa6c-6ebe0a7d5519">
 
 ### 5. 프로필
-<img width="300" alt="profile_update" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5104bccc-c4e6-410e-beae-fe9ecf222040">
+<img width="400" alt="profile_update" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5104bccc-c4e6-410e-beae-fe9ecf222040">
 
 ### 6. 검색
 <img width="700" alt="search_ui" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/0c8525c0-ccf9-4e84-8683-750b94d00cd9">
@@ -101,7 +101,7 @@ Django로 구현한 SNS Project
 
 # DB 설계
 ### ERD
-<img width="400" alt="ERD" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/79869d60-e509-4598-b1c0-c8949f13f887">
+<img width="800" alt="ERD" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/79869d60-e509-4598-b1c0-c8949f13f887">
 
 <br>
 
@@ -134,3 +134,4 @@ Django로 구현한 SNS Project
 * 채팅기능
 
 ### 보완
+* 비밀번호 찾기
