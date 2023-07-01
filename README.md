@@ -8,7 +8,7 @@ Django로 구현한 SNS Project
 * 개발 인원 : 1명
 * 개발 기간 : 2023.04 ~ 2023.06
 * 개발 언어 : Python 3.10
-* 개발 환경 : Django 4.2
+* 개발 환경 : Django 4.2, Docker
 * DB : MariaDB
 * 버전 관리 : git&github
 
