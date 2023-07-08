@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
@@ -13,7 +14,7 @@ urlpatterns = [
 
     # signup, detail, edit, delete
     path("signup/", AccountSignupView.as_view(), name="signup"),
-    path("detail/<int:pk>/", AccountDetailView.as_view(), name="detail"),
+    path("detail/<int:pk>/", login_required(AccountDetailView.as_view()), name="detail"),
     path("edit/<int:pk>/", AccountEditView.as_view(), name="edit"),
     path("delete/<int:pk>/", AccountDeleteView.as_view(), name="delete"),
 
