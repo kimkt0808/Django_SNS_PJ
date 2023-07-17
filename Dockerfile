@@ -2,7 +2,7 @@ FROM python:3.10.0
 
 WORKDIR /home/
 
-RUN echo "test8"
+RUN echo "test9"
 
 RUN git clone https://github.com/8azelnut/Django_SNS_PJ.git
 
