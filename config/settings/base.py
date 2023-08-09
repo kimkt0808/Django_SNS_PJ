@@ -138,25 +138,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
-
-
-# AWS_STORAGE_BUCKET
-
-AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME", default="")
-AWS_S3_ACCESS_KEY_ID = env.str("AWS_S3_ACCESS_KEY_ID", default="")
-AWS_S3_SECRET_ACCESS_KEY = env.str("AWS_S3_SECRET_ACCESS_KEY", default="")
-AWS_S3_REGION_NAME = env.str("AWS_S3_REGION_NAME", default="ap-northeast-2")
-
-if AWS_S3_ACCESS_KEY_ID and AWS_S3_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
-    if django.VERSION < (4, 2):
-        DEFAULT_FILE_STORAGE = "config.aws.AwsMediaStorage"
-        STATICFILES_STORAGE = "config.aws.AwsStaticStorage"
-    else:
-        STORAGES = {
-            "default": {
-                "BACKEND": "config.aws.AwsMediaStorage",
-            },
-            "staticfiles": {
-                "BACKEND": "config.aws.AwsStaticStorage",
-            },
-        }
