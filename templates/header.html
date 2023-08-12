@@ -23,6 +23,10 @@
     </div>
 
     {% if user.is_authenticated %}
+        <a href="{% url 'chatapp:index' %}">
+            <span>Chat</span>
+        </a>
+        &nbsp; &nbsp;
         <a href="{% url 'accountapp:detail' pk=user.pk %}">
             <span>{{ user }}님 환영합니다</span>
         </a>

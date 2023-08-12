@@ -30,6 +30,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Application definition
 
 INSTALLED_APPS = [
+    # channels
+    "channels",
+    "daphne",
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,6 +49,7 @@ INSTALLED_APPS = [
     "likeapp",
     "followapp",
     "searchapp",
+    "chatapp",
 
     # Staticfiles
     "storages",
@@ -82,6 +87,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
 
 
 # Password validation

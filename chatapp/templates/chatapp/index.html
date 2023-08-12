@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{# TODO: 채팅방 목록 보여주기 #}
+
+{% block content %}
+    <body style="margin-top: 5rem;">
+        <h2>채팅방 목록</h2>
+        <ul>
+            <li>
+                <a href="{% url 'chatapp:room' 'test' %}">테스트 채팅방 입장</a>
+            </li>
+        </ul>
+    </body>
+{% endblock %}
