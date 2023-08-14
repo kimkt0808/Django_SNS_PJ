@@ -3,12 +3,16 @@
 {# TODO: 채팅방 목록 보여주기 #}
 
 {% block content %}
-    <body style="margin-top: 5rem;">
-        <h2>채팅방 목록</h2>
+    <div class="container" style="margin-top: 5rem;">
+        <h1>채팅방 목록</h1>
         <ul>
-            <li>
-                <a href="{% url 'chatapp:room' 'test' %}">테스트 채팅방 입장</a>
-            </li>
+            {% for room in room_list %}
+                <li>
+                    <a href="{% url 'chatapp:room' room.pk %}">{{ room.name }}</a>
+                </li>
+            {% endfor %}
         </ul>
-    </body>
+
+        <a href="{% url 'chatapp:create' %}">새 채팅방 만들기</a>
+    </div>
 {% endblock %}

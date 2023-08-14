@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load django_bootstrap5 %}
 
 {% block extra-style %}
 <style>
@@ -23,7 +22,7 @@
 <section style="background-color: #eee;">
     <div class="container my-5">
         <div class="row">
-            <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0" style="height: 800px;">
+            <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0" style="height: 750px;">
                 <div class="card" style="height: 650px; margin-top: 5rem;">
                     <div class="card-header">
                         접속 유저
@@ -36,7 +35,7 @@
             <div class="col-md-6 col-lg-7 col-xl-8" style="margin-top: 5rem; height: 650px;">
                 <div class="card" style="height: 650px;">
                     <div class="card-header">
-                            채팅방 : {{ room_name }}
+                            채팅방 : {{ room.name }}
                     </div>
                     <div class="card-body overflow-hidden">
                         <div id="chat_messages" class="w-100 h-100 border-0 overflow-scroll"></div>
@@ -49,6 +48,8 @@
                 </div>
             </div>
 
+            <a href="{% url 'chatapp:index' %}" class="btn btn-primary">대기실로 이동</a>
+
         </div>
     </div>
 </section>
@@ -58,12 +59,54 @@
 <script>
     const handlers = {
         chat_messages_tag: null,
+        ws: null,
 
         init() {
             this.chat_messages_tag = document.querySelector("#chat_messages");
 
             document.querySelector("#message_form")
                 .addEventListener("submit", this.onsubmit.bind(this));
+        },
+
+        connect(url) {
+            this.ws = new WebSocket(url);
+
+            this.ws.onopen = this.onopen.bind(this);
+            this.ws.onclose = this.onclose.bind(this);
+            this.ws.onerror = this.onerror.bind(this);
+            this.ws.onmessage = this.onmessage.bind(this);
+        },
+
+        onopen() {
+            console.log("웹소켓 서버와 접속");
+        },
+
+        onclose(event) {
+            const close_code = event.code;
+
+            if(!event.wasClean) {
+                console.log("웹소켓 서버에 접속할 수 없습니다. 대기실로 이동합니다.");
+                window.location.href = "{% url 'chatapp:index' %}";
+            }
+        },
+
+        onerror() {
+            console.log("웹소켓 에러가 발생했습니다. 대기실로 이동합니다.");
+            window.location.href = "{% url 'chatapp:index' %}";
+        },
+
+        onmessage(event) {
+            const message_json = event.data;
+            console.log("메세지 수신 :", message_json);
+
+            const { type, message } = JSON.parse(message_json);
+            switch(type) {
+                case "chat.message":
+                    this.append_message(message);
+                    break;
+                default:
+                    console.error(`Invalid message type : ${type}`);
+            }
         },
 
         append_message(message) {
@@ -88,9 +131,18 @@
             const { message } = props;
             console.log("웹소켓으로 전송할 메세지 :", message);
 
-            this.append_message(message);
+            this.ws.send(JSON.stringify({
+                type: "chat.message",
+                message: message,
+            }))
         }
     };
-    handlers.init();
+
+handlers.init();
+
+const protocol = location.protocol === "http:" ? "ws:" : "wss:";
+const url = protocol + "//" + location.host + "/ws" + location.pathname;
+
+handlers.connect(url);
 </script>
 {% endblock %}
