@@ -13,6 +13,14 @@
         max-width: 80%;
         word-wrap: break-word;
     }
+    .chat-message.message_owner {
+        text-align: right;
+    }
+    .chat-message.message_owner > div {
+        background-color: #1f8cff;
+        color: #fff;
+        text-align: left;
+    }
 </style>
 {% endblock %}
 
@@ -42,7 +50,7 @@
                     </div>
                     <div class="card-footer">
                         <form id="message_form">
-                            <input type="text" name="message" class="form-control" autofocus autocomplete="off" />
+                            <input type="text" name="message" class="form-control" required placeholder="메세지를 입력하세요." autofocus autocomplete="off" />
                         </form>
                     </div>
                 </div>
@@ -99,19 +107,23 @@
             const message_json = event.data;
             console.log("메세지 수신 :", message_json);
 
-            const { type, message } = JSON.parse(message_json);
+            const { type, message, message_owner } = JSON.parse(message_json);
             switch(type) {
                 case "chat.message":
-                    this.append_message(message);
+                    this.append_message(message, message_owner);
                     break;
                 default:
                     console.error(`Invalid message type : ${type}`);
             }
         },
 
-        append_message(message) {
+        append_message(message, message_owner) {
             const element = document.createElement("div");
             element.className = "chat-message";
+
+            if (message_owner === "{{ user.username }}") {
+                element.className += " " + "message_owner";
+            }
 
             const wrapper = document.createElement("div");
             wrapper.textContent = message;

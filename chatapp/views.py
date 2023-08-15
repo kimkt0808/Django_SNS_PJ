@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from chatapp.forms import RoomForm
@@ -12,6 +13,7 @@ def index(request):
     })
 
 
+@login_required
 def create(request):
     if request.method == "POST":
         form = RoomForm(request.POST)
@@ -27,6 +29,7 @@ def create(request):
     })
 
 
+@login_required
 def room(request, room_pk):
     room_obj = get_object_or_404(Room, pk=room_pk)
 
