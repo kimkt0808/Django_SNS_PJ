@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{# TODO: 채팅방 삭제하기 #}
+
+{% block content %}
+    <div class="container" style="margin-top: 5rem;">
+        <h2>[{{ room.name }}] 삭제하기</h2>
+
+        <div class="my-3">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="alert alert-danger">삭제하시겠습니까?</div>
+                <input type="submit" class="btn btn-danger" value="삭제하겠습니다." />
+            </form>
+        </div>
+
+        <a href="{% url 'chatapp:index' %}" class="btn btn-primary">
+            대기실로 이동
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% load django_bootstrap5 %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "head.html" %}
+
+<body>
+
+    {% include "header.html" %}
+
+    {% bootstrap_messages %}
+
+    {% block content %} {% endblock %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% block extra-script %}{% endblock %}
+    {% block extra-style %}{% endblock %}
+
+    {% include "footer.html" %}
+
+</body>
+</html>

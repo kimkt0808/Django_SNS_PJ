@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "chatapp/templates/base.html" %}
 
 {% block extra-style %}
 <style>
@@ -21,6 +21,10 @@
         color: #fff;
         text-align: left;
     }
+    div.left {
+        float: left;
+        margin-bottom: 15px;
+    }
 </style>
 {% endblock %}
 
@@ -28,7 +32,7 @@
 
 {% block content %}
 <section style="background-color: #eee;">
-    <div class="container my-5">
+    <div class="container my-4">
         <div class="row">
             <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0" style="height: 750px;">
                 <div class="card" style="height: 650px; margin-top: 5rem;">
@@ -56,11 +60,32 @@
                 </div>
             </div>
 
-            <a href="{% url 'chatapp:index' %}" class="btn btn-primary">대기실로 이동</a>
-
+            <div class="left">
+                <a href="{% url 'chatapp:index' %}" class="btn btn-primary">대기실로 이동</a>
+                {% if request.user == room.user %}
+                    <a href="{% url 'chatapp:delete' room.pk %}" class="btn btn-danger">채팅방 삭제하기</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </section>
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">알림</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra-script %}
@@ -92,7 +117,12 @@
         onclose(event) {
             const close_code = event.code;
 
-            if(!event.wasClean) {
+            if(close_code === 4000) {
+                this.modal("채팅방이 삭제되었습니다. 대기실로 이동합니다.", () => {
+                    window.location.href = "{% url 'chatapp:index' %}";
+                });
+            }
+            else if(!event.wasClean) {
                 console.log("웹소켓 서버에 접속할 수 없습니다. 대기실로 이동합니다.");
                 window.location.href = "{% url 'chatapp:index' %}";
             }
@@ -147,6 +177,22 @@
                 type: "chat.message",
                 message: message,
             }))
+        },
+
+        modal(message, ok_handler) {
+            const modal_ele = document.querySelector("#staticBackdrop");
+            const body_ele = modal_ele.querySelector(".modal-body");
+            const button_ele = modal_ele.querySelector(".modal-footer button");
+
+            body_ele.textContent = message;
+
+            button_ele.addEventListener("click", () => {
+                if(ok_handler) ok_handler();
+                modal.hide();
+            });
+
+            const modal = new bootstrap.Modal(modal_ele);
+            modal.show();
         }
     };
 
