@@ -3,8 +3,10 @@
 {% block extra-style %}
 <style>
     .chat-message > div {
-        background-color: #3b3b3b;
-        color: #e1e1e1;
+        background-color: #fff;
+        color: #000;
+        border: 1px solid;
+        border-color: #c0c0c0;
         border-radius: 0.8em;
         padding: 0.4em;
         margin: 0.4em 0;
@@ -20,6 +22,7 @@
         background-color: #1f8cff;
         color: #fff;
         text-align: left;
+        margin-right: 1rem;
     }
     div.left {
         float: left;
@@ -148,6 +151,8 @@
         },
 
         append_message(message, message_owner) {
+            let today = new Date();
+
             const element = document.createElement("div");
             element.className = "chat-message";
 
@@ -156,7 +161,7 @@
             }
 
             const wrapper = document.createElement("div");
-            wrapper.textContent = message;
+            wrapper.innerHTML = `<div><p>${ message }</p><hr/><div align= "right">${ message_owner }<br/>${ today.toLocaleString() }</div></div>`;
             element.appendChild(wrapper);
 
             this.chat_messages_tag.appendChild(element);
