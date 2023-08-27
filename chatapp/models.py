@@ -4,8 +4,58 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_delete
 
+from config.convert_json import JSONEncoder, JSONDecoder
 
-class Room(models.Model):
+
+class OnlineUserMixin(models.Model):
+    online_user_set = models.ManyToManyField(User, through="RoomMember", blank=True, related_name="joined_room_set")
+
+    class Meta:
+        abstract = True
+
+    def get_online_users(self):
+        return self.online_user_set.all()
+
+    def get_online_usernames(self):
+        qs = self.get_online_users().values_list("username", flat=True)
+        return list(qs)
+
+    def is_joined_user(self, user):
+        return self.get_online_users().filter(pk=user.pk).exists()
+
+    def user_join(self, channel_name, user):
+        try:
+            room_member = RoomMember.objects.get(room=self, user=user)
+        except RoomMember.DoesNotExist:
+            room_member = RoomMember(room=self, user=user)
+
+        is_new_join = len(room_member.channels_names) == 0
+        room_member.channels_names.add(channel_name)
+
+        if room_member.pk is None:
+            room_member.save()
+        else:
+            room_member.save(update_fields=["channels_names"])
+
+        return is_new_join
+
+    def user_leave(self, channel_name, user):
+        try:
+            room_member = RoomMember.objects.get(room=self, user=user)
+        except RoomMember.DoesNotExist:
+            return True
+
+        room_member.channels_names.remove(channel_name)
+
+        if not room_member.channels_names:
+            room_member.delete()
+            return True
+        else:
+            room_member.save(update_fields=["channels_names"])
+            return False
+
+
+class Room(OnlineUserMixin, models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="room")
     name = models.CharField(max_length=20)
     # password
@@ -40,3 +90,13 @@ post_delete.connect(
     sender=Room,
     dispatch_uid="room__on_post_delete",
 )
+
+
+class RoomMember(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    channels_names = models.JSONField(
+        default=set,
+        encoder=JSONEncoder,
+        decoder=JSONDecoder,
+    )
