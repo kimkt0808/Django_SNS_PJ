@@ -1,6 +1,5 @@
 <style>
     .navbar {
-        position: fixed;
         width: 100%;
         top: 0;
     }
@@ -36,6 +35,10 @@
         </a>
         &nbsp;
     {% else %}
+        <a href="{% url 'chatapp:index' %}">
+            <span>Chat</span>
+        </a>
+        &nbsp; &nbsp;
         <a href="{% url 'accountapp:signup' %}">
             <span>회원가입</span>
         </a>
