@@ -1,9 +1,12 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy, reverse
+from django.views import View
+from django.views.generic import CreateView, DeleteView, DetailView, ListView
 
-from chatapp.forms import RoomForm
+from chatapp.forms import RoomForm, PasswordForm
 from chatapp.models import Room
 
 
@@ -15,57 +18,66 @@ def index(request):
     })
 
 
-@login_required
-def create(request):
-    if request.method == "POST":
-        form = RoomForm(request.POST)
+class RoomCreateView(CreateView):
+    model = Room
+    form_class = RoomForm
+    template_name = "chatapp/create_room.html"
 
-        if form.is_valid():
-            created_room = form.save(commit=False)
-            created_room.user = request.user
-            created_room.save()
-            return redirect("chatapp:room", created_room.pk)
-    else:
-        form = RoomForm()
+    def form_valid(self, form):
+        room = form.save(commit=False)
+        room.user = self.request.user
+        room.save()
 
-    return render(request, "chatapp/create_room.html", {
-        "form": form,
-    })
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("chatapp:room", kwargs={"room_pk": self.object.pk})
 
 
-@login_required
-def room(request, room_pk):
-    room_obj = get_object_or_404(Room, pk=room_pk)
+class RoomDetailView(DetailView):
+    model = Room
+    context_object_name = "room"
+    template_name = "chatapp/room.html"
 
-    return render(request, "chatapp/room.html", {
-        "room": room_obj,
-    })
+    def get_object(self, queryset=None):
+        room_obj = get_object_or_404(Room, pk=self.kwargs["room_pk"])
+
+        return room_obj
+
+    def post(self, request, *args, **kwargs):
+        room_obj = self.get_object()
+        password_form = PasswordForm(request.POST)
+
+        if password_form.is_valid():
+            password = password_form.cleaned_data['password']
+
+            if not room_obj.check_room_password(password):
+                messages.error(request, '비밀번호가 일치하지 않습니다.')
+
+                return redirect('chatapp:index')
+
+        return super().get(request, *args, **kwargs)
 
 
-@login_required
-def delete(request, room_pk):
-    room_obj = get_object_or_404(Room, pk=room_pk)
+class RoomDeleteView(DeleteView):
+    model = Room
+    context_object_name = "room"
+    success_url = reverse_lazy("chatapp:index")
+    template_name = "chatapp/delete_room.html"
 
-    if request.method == "POST":
-        room_obj.delete()
-        messages.success(request, "채팅방이 삭제되었습니다.")
+    def get_object(self, queryset=None):
+        room_obj = get_object_or_404(Room, pk=self.kwargs["room_pk"])
 
-        return redirect("chatapp:index")
-
-    return render(request, "chatapp/delete_room.html", {
-        "room": room_obj,
-    })
+        return room_obj
 
 
-@login_required
-def user_list(request, room_pk):
-    room = get_object_or_404(Room, pk=room_pk)
+class RoomUserListView(ListView):
+    model = Room
 
-    if not room.is_joined_user(request.user):
-        return HttpResponse("Unauthorized user", status=401)
+    def get(self, request, *args, **kwargs):
+        room = get_object_or_404(Room, pk=self.kwargs["room_pk"])
+        user_list = room.get_online_usernames()
 
-    username_list = room.get_online_usernames()
-
-    return JsonResponse({
-        "username_list": username_list,
-    })
+        return JsonResponse({
+            "username_list": user_list,
+        })

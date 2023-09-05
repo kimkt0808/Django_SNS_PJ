@@ -1,5 +1,6 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_delete
@@ -56,10 +57,11 @@ class OnlineUserMixin(models.Model):
 
 
 class Room(OnlineUserMixin, models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="room")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="room", null=True)
+
     name = models.CharField(max_length=20)
-    # password
-    # description
+    password = models.CharField(max_length=128)
+    description = models.TextField(max_length=200, null=True)
     # category
 
     class Meta:
@@ -72,6 +74,14 @@ class Room(OnlineUserMixin, models.Model):
     @staticmethod
     def make_chat_group_name(room=None, room_pk=None):
         return "chat-%s" % (room_pk or room.pk)
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.password = make_password(self.password)
+        super(Room, self).save(*args, **kwargs)
+
+    def check_room_password(self, password):
+        return check_password(password, self.password)
 
 
 def room__on_post_delete(instance: Room, **kwargs):

@@ -234,6 +234,13 @@
 
             const modal = new bootstrap.Modal(modal_ele);
             modal.show();
+        },
+
+        myFunction() {
+            $('#submit').click(function() {
+                var name = prompt("Please enter your name", "");
+                $.post('/url/to/django/handler', {'name': name});
+            });
         }
     };
 
