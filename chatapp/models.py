@@ -62,6 +62,8 @@ class Room(OnlineUserMixin, models.Model):
     name = models.CharField(max_length=20)
     password = models.CharField(max_length=128)
     description = models.TextField(max_length=200, null=True)
+
+    is_password_set = models.BooleanField(default=False, blank=True)
     # category
 
     class Meta:

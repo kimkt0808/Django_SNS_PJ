@@ -21,3 +21,25 @@
         <a href="{% url 'chatapp:index' %}" class="btn btn-primary">Back</a>
     </div>
 {% endblock %}
+
+{% block extra-script %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        if ($('#id_is_password_set').is(":checked")) {
+            $('#id_password').parent().show();
+        } else {
+            $('#id_password').parent().hide();
+        }
+
+        $('#id_is_password_set').change(function() {
+            if ($(this).is(":checked")) {
+                $('#id_password').parent().show();
+            } else {
+                $('#id_password').parent().hide();
+            }
+         });
+    });
+</script>
+{% endblock %}
