@@ -17,7 +17,7 @@ class RoomForm(ModelForm):
 
 
 class PasswordForm(ModelForm):
-    password = forms.CharField(label='비밀번호', widget=forms.PasswordInput)
+    password = forms.CharField(required=False, label='비밀번호', widget=forms.PasswordInput)
 
     class Meta:
         model = Room

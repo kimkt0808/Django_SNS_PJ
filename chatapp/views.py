@@ -52,10 +52,10 @@ class RoomDetailView(DetailView):
         if password_form.is_valid():
             password = password_form.cleaned_data['password']
 
-            if not room_obj.check_room_password(password):
-                messages.error(request, '비밀번호가 일치하지 않습니다.')
-                origin = request.POST.get('origin', 'index')
+            if not password or not room_obj.check_room_password(password):
+                messages.error(request, '비밀번호가 일치하지 않거나 제대로 입력하지 않았습니다. 다시 입력해 주세요.')
 
+                origin = request.POST.get('origin', 'index')
                 if origin == 'index':
                     return redirect('chatapp:index')
                 elif origin == 'room_search_list':
