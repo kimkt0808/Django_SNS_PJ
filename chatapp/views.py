@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.utils.http import urlencode
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView
 
@@ -53,8 +54,17 @@ class RoomDetailView(DetailView):
 
             if not room_obj.check_room_password(password):
                 messages.error(request, '비밀번호가 일치하지 않습니다.')
+                origin = request.POST.get('origin', 'index')
 
-                return redirect('chatapp:index')
+                if origin == 'index':
+                    return redirect('chatapp:index')
+                elif origin == 'room_search_list':
+                    base_url = reverse('searchapp:room_search_list')
+
+                    query_string = urlencode({'room_q': room_obj.name})
+                    url = f'{base_url}?{query_string}'
+
+                    return redirect(url)
 
         return super().get(request, *args, **kwargs)
 

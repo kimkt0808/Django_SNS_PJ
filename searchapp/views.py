@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 from django.views.generic import ListView
 
+from chatapp.models import Room
 
-class SearchListView(ListView):
+
+class UserSearchListView(ListView):
     model = User
-    template_name = "searchapp/search_list.html"
+    template_name = "searchapp/user_search_list.html"
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self):
         q = self.request.GET.get("q", None)
 
         if q:
@@ -15,3 +17,18 @@ class SearchListView(ListView):
             object_list = User.objects.none()
 
         return object_list
+
+
+class RoomSearchListView(ListView):
+    model = Room
+    template_name = "searchapp/room_search_list.html"
+
+    def get_queryset(self):
+        q = self.request.GET.get("room_q")
+
+        if q:
+            room_list = Room.objects.filter(name__icontains=q)
+        else:
+            room_list = Room.objects.none()
+
+        return room_list

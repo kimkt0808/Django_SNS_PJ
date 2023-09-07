@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if room_list %}
+    <div class="album py-5 bg-light" style="margin-top: 5rem;">
+        <div class="container">
+            <div class="container">
+                <div class="row">
+                    {% for room in room_list %}
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-body">
+                                    {% if room.is_password_set %}
+                                        <h5><a href="#" class="room-name-link" data-room-id="{{ room.pk }}">{{ room.name }}</a></h5>
+                                        <div class="password-form mt-3 mt-lg-0 d-none" data-room-id="{{ room.pk }}">
+                                            <form method="POST" action="{% url 'chatapp:room' room.pk %}" class="d-flex mt-3 mt-lg-0">
+                                                <input type="hidden" name="origin" value="room_search_list">
+                                                {% csrf_token %}
+                                                <div class="form-group" style="width: 85%">
+                                                    <div class="input-group mb-2">
+                                                        <input type="password" name="password" id="password{{ room.pk }}" class="form-control" style="margin-right: 0.5rem; margin-top: 0.5rem;" placeholder="비밀번호 입력">
+                                                    </div>
+                                                </div>
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">입장</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    {% else %}
+                                        <h5><a href="{% url 'chatapp:room' room.pk %}">{{ room.name }}</a></h5>
+                                    {% endif %}
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        {{ room.description }}
+                                    </div>
+                                    <small class="text-muted">9 mins</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/magicgrid.js"></script>
+{% else %}
+    <table style="margin: auto; margin-top: 5rem; width: 30%; height: 100px;">
+        <thead>
+        <tr>
+            <th class="text-center">검색<hr></th>
+        </tr>
+        </thead>
+
+        <tbody align="center">
+            <tr>
+                <td>
+                    <span>
+                        해당 채팅방이 존재하지 않습니다ㅠ
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
+
+{% block extra-script %}
+<script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var roomNameLinks = document.querySelectorAll('.room-name-link');
+
+    Array.from(roomNameLinks).forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            var roomId = this.getAttribute('data-room-id');
+            var passwordForm = document.querySelector('.password-form[data-room-id="' + roomId + '"]');
+
+            if (passwordForm) {
+                if (passwordForm.classList.contains('d-none')) {
+                    passwordForm.classList.remove('d-none');
+                } else {
+                    passwordForm.classList.add('d-none');
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

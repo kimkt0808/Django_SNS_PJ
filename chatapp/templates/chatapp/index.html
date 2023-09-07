@@ -3,8 +3,7 @@
 {# TODO: 채팅방 목록 보여주기 #}
 
 {% block content %}
-<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet"
-      xmlns="http://www.w3.org/1999/html">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
 
     <div style="text-align: center; margin-top: 3rem;">
         <a href="{% url 'chatapp:create' %}">
@@ -18,7 +17,7 @@
 
     <div class="album py-5 bg-light">
         <div class="container">
-            <form class="d-flex mt-3 mt-lg-0" role="search" style="width: 100%;">
+            <form method="get" class="d-flex mt-3 mt-lg-0" role="search" style="width: 100%;" action="{% url 'searchapp:room_search_list' %}">
                 <select class="form-select" style="width: auto;" id="sort-select" onchange="location = this.value;">
                     <option class="sort-date" value="/">최신순</option>
                     <option class="sort-likes" value="?sort=likes">좋아요순</option>
@@ -27,7 +26,7 @@
                     {% endif %}
                 </select>
                 &nbsp;
-                <input class="form-control flex-grow-1 me-2" type="search" placeholder="Search" aria-label="Search"">
+                <input class="form-control flex-grow-1 me-2" type="search" placeholder="Search" aria-label="Search" name="room_q" value="{{ request.GET.room_q }}">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
         </div>
@@ -44,6 +43,7 @@
                                     <h5><a href="#" class="room-name-link" data-room-id="{{ room.pk }}">{{ room.name }}</a></h5>
                                     <div class="password-form mt-3 mt-lg-0 d-none" data-room-id="{{ room.pk }}">
                                         <form method="POST" action="{% url 'chatapp:room' room.pk %}" class="d-flex mt-3 mt-lg-0">
+                                            <input type="hidden" name="origin" value="index">
                                             {% csrf_token %}
                                             <div class="form-group" style="width: 85%">
                                                 <div class="input-group mb-2">
