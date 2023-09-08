@@ -1,5 +1,7 @@
+from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
@@ -51,6 +53,22 @@ class AccountDeleteView(DeleteView):
     context_object_name = "my_user"
     success_url = reverse_lazy("accountapp:login")
     template_name = "accountapp/delete.html"
+
+
+class AccountLogoutView(LogoutView):
+    next_page = reverse_lazy("chatapp:index")
+
+    def dispatch(self, request, *args, **kwargs):
+        logout(request)
+        user = request.user
+
+        if user.is_authenticated:
+            chat_rooms = user.joined_room_set.all()
+
+            for room in chat_rooms:
+                room.user_leave(channel_name=request.channel_name, user=user)
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 class FollowerListView(ListView):
