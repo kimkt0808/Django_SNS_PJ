@@ -1,17 +1,21 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
-from chatapp.models import Room
+from chatapp.models import Room, PrivateRoom
 
 
 class ChatConsumer(JsonWebsocketConsumer):
+    """
     # INIT
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.group_name = ""
         self.room = None
 
+    """
     # CONNECT
+    """
     def connect(self):
         user = self.scope["user"]
         room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
@@ -39,7 +43,9 @@ class ChatConsumer(JsonWebsocketConsumer):
 
             self.accept()
 
+    """
     # DISCONNECT
+    """
     def disconnect(self, code):
         user = self.scope["user"]
 
@@ -59,12 +65,16 @@ class ChatConsumer(JsonWebsocketConsumer):
                     }
                 )
 
+    """
     # DELETE
+    """
     def chat_room_deleted(self, message_dict):
         custom_code = 4000
         self.close(code=custom_code)
 
+    """
     # RECEIVE_JSON
+    """
     def receive_json(self, content, **kwargs):
         user = self.scope["user"]
         _type = content["type"]
@@ -84,21 +94,103 @@ class ChatConsumer(JsonWebsocketConsumer):
         else:
             print(f"Invalid message type : ${_type}")
 
+    """
+    # RETURN JSON
+    """
+    def chat_message(self, event):
+        self.send_json({
+            "type": "chat.message",
+            "message": event["message"],
+            "message_owner": event["message_owner"],
+        })
+
+    """
     # USER_JOIN
+    """
     def chat_user_join(self, event):
         self.send_json({
             "type": "chat.user.join",
             "username": event["username"],
         })
 
+    """
     # USER_LEAVE
+    """
     def chat_user_leave(self, event):
         self.send_json({
             "type": "chat.user.leave",
             "username": event["username"],
         })
 
+
+class PrivateRoomChatConsumer(JsonWebsocketConsumer):
+    """
+    # INIT
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.group_name = ""
+        self.private_room = None
+
+    """
+    # CONNECT
+    """
+    def connect(self):
+        user = self.scope["user"]
+        room_pk = self.scope["url_route"]["kwargs"]["room_pk"]
+
+        try:
+            self.private_room = PrivateRoom.objects.get(pk=room_pk)
+            if user != self.private_room.user1 and user != self.private_room.user2:
+                raise PermissionError("User not allowed in this room.")
+            else:
+                self.group_name = self.private_room.chat_group_name
+
+                async_to_sync(self.channel_layer.group_add)(
+                    self.group_name,
+                    self.channel_name,
+                )
+
+                self.accept()
+
+        except (PrivateRoom.DoesNotExist, PermissionError) as e:
+            print(f"Connection rejected. Reason: {e}")
+            self.close()
+
+    """
+    # DISCONNECT
+    """
+    def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name,
+            self.channel_name,
+        )
+
+    """
+    # RECEIVE_JSON
+    """
+    def receive_json(self, content, **kwargs):
+        user = self.scope["user"]
+        _type = content["type"]
+
+        if _type == "chat.message":
+            message_owner = user.username
+            message = content["message"]
+
+            async_to_sync(self.channel_layer.group_send)(
+                self.group_name,
+                {
+                    "type": "chat.message",
+                    "message": message,
+                    "message_owner": message_owner,
+                }
+            )
+        else:
+            print(f"Invalid message type : ${_type}")
+
+    """
     # RETURN JSON
+    """
     def chat_message(self, event):
         self.send_json({
             "type": "chat.message",

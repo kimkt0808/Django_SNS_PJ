@@ -112,3 +112,16 @@ class RoomMember(models.Model):
         encoder=JSONEncoder,
         decoder=JSONDecoder,
     )
+
+
+class PrivateRoom(models.Model):
+    user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user1")
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user2")
+
+    @property
+    def chat_group_name(self):
+        return self.make_chat_group_name(room=self)
+
+    @staticmethod
+    def make_chat_group_name(room=None, room_pk=None):
+        return "chat-%s" % (room_pk or room.pk)

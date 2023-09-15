@@ -122,6 +122,8 @@
             {% else %}
                 <a href="{% url 'followapp:follow' pk=my_user.pk %}" class="btn btn-primary rounded-pill px-4 text-white" style="text-decoration: none">팔로우</a>
             {% endif %}
+
+            <a href="{% url 'chatapp:private_room_create' username=my_user.username %}" class="btn btn-success rounded-pill px-4 text-white" style="text-decoration: none">대화하기</a>
         {% endif %}
         </div>
     </div>

@@ -1,6 +1,7 @@
 from django.contrib import messages
-from django.contrib.auth.hashers import check_password
-from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.models import User
+from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.http import urlencode
@@ -8,7 +9,7 @@ from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView
 
 from chatapp.forms import RoomForm, PasswordForm
-from chatapp.models import Room
+from chatapp.models import Room, PrivateRoom
 
 
 def index(request):
@@ -91,3 +92,53 @@ class RoomUserListView(ListView):
         return JsonResponse({
             "username_list": user_list,
         })
+
+
+class PrivateRoomCreateView(View):
+    def get(self, request, *args, **kwargs):
+        user2 = User.objects.get(username=self.kwargs["username"])
+
+        room = PrivateRoom.objects.filter(Q(user1=request.user, user2=user2) | Q(user1=user2, user2=request.user)).first()
+
+        if not room:
+            room = PrivateRoom(user1=request.user, user2=user2)
+            room.save()
+
+        return redirect(reverse("chatapp:private_room", kwargs={"pk": room.pk}))
+
+
+class PrivateRoomDetailView(DetailView):
+    model = PrivateRoom
+    context_object_name = "rooms"
+    template_name = "chatapp/private_room.html"
+
+    def get(self, request, *args, **kwargs):
+        room = self.get_object()
+
+        if request.user != room.user1 and request.user != room.user2:
+            return redirect('chatapp:index')
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        room = self.get_object()
+
+        if room.user1 == self.request.user:
+            other_user = room.user2
+        else:
+            other_user = room.user1
+
+        context['other_user'] = other_user
+        context['my_rooms'] = PrivateRoom.objects.filter(Q(user1=self.request.user) | Q(user2=self.request.user))
+
+        return context
+
+
+class PrivateRoomListView(ListView):
+    model = PrivateRoom
+    context_object_name = "my_rooms"
+    template_name = "chatapp/private_room_list.html"
+
+    def get_queryset(self):
+        return PrivateRoom.objects.filter(Q(user1=self.request.user) | Q(user2=self.request.user))
