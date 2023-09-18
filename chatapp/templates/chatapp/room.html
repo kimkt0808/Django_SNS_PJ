@@ -28,10 +28,28 @@
         float: left;
         margin-bottom: 15px;
     }
+    .chat-message.owner {
+        justify-content: flex-end;
+        margin-right: 0.5rem;
+    }
+    .chat-message.other {
+        justify-content: flex-start;
+    }
+    .card.w-100 {
+        max-width: 50%;
+    }
+    #chat_messages::-webkit-scrollbar {
+        width:.5em;
+        opacity:.3
+     }
+    #chat_messages::-webkit-scrollbar-track {
+        -webkit-box-shadow:none
+    }
+    #chat_messages::-webkit-scrollbar-thumb {
+        background-color:#C0C0C0
+    }
 </style>
 {% endblock %}
-
-{# TODO: 채팅방 구현하기 #}
 
 {% block content %}
 <section style="background-color: #eee;">
@@ -44,7 +62,7 @@
                         <span id="user_count"></span>
                     </div>
                     <div class="card-body">
-                        <ul id="user_list"></ul>
+                        <ul style="font-size: 20px;" id="user_list"></ul>
                     </div>
                 </div>
             </div>
@@ -57,10 +75,11 @@
                     <div class="card-body overflow-hidden">
                         <div id="chat_messages" class="w-100 h-100 border-0 overflow-scroll"></div>
                     </div>
-                    <div class="card-footer">
-                        <form id="message_form">
+                    <div class="card-footer" style="display: flex; align-items: center;">
+                        <form id="message_form" style="flex-grow: 1;">
                             <input type="text" name="message" class="form-control" required placeholder="메세지를 입력하세요." autofocus autocomplete="off" />
                         </form>
+                        <button type="submit" form="message_form" class="btn btn-primary" style="margin-left: 0.5rem;">보내기</button>
                     </div>
                 </div>
             </div>
@@ -173,24 +192,80 @@
         append_message(message, message_owner) {
             let today = new Date();
 
-            const element = document.createElement("div");
-            element.className = "chat-message";
+            const liElement = document.createElement("li");
+            liElement.className = "d-flex mb-4 chat-message";
 
             if (message_owner === "{{ user.username }}") {
-                element.className += " " + "message_owner";
+                liElement.classList.add('owner');
+            } else if (message_owner !== undefined) {
+                liElement.classList.add('other');
             }
 
-            if (message_owner === undefined) {
-                const wrapper = document.createElement("div");
-                wrapper.textContent = message;
-                element.appendChild(wrapper);
+            const cardDiv = document.createElement("div");
+            cardDiv.className = "card w-100";
+
+            const headerDiv = document.createElement("div");
+            headerDiv.className = "card-header d-flex justify-content-between p-3";
+
+            const namePtag = document.createElement("p");
+            namePtag.className = "fw-bold mb-0";
+            namePtag.textContent = message_owner;
+
+            const timePtag = document.createElement('p');
+            timePtag.className = "text-muted small mb-0";
+            timePtag.innerHTML = `<i class="far fa-clock"></i> ${today.toLocaleString()}`;
+
+            headerDiv.appendChild(namePtag);
+            headerDiv.appendChild(timePtag);
+
+            const bodyDiv = document.createElement('div');
+            bodyDiv.className = "card-body";
+
+            const msgPTag = document.createElement('p');
+            msgPTag.className = "mb-0";
+            msgPTag.textContent = message;
+
+            bodyDiv.appendChild(msgPTag);
+            cardDiv.appendChild(headerDiv);
+            cardDiv.appendChild(bodyDiv);
+
+            if (message_owner === "{{ user.username }}") {
+                liElement.appendChild(cardDiv);
+
+                let avatarImgTag = document.createElement('img');
+                avatarImgTag.src = '{{ user.profile.image.url }}';
+                avatarImgTag.alt = 'avatar';
+                avatarImgTag.width = '60';
+
+                avatarImgTag.classList.add(
+                    'rounded-circle',
+                    'd-flex',
+                    'align-self-start',
+                    'ms-3',
+                    'shadow-1-strong'
+                );
+
+                liElement.appendChild(avatarImgTag);
             } else {
-                const wrapper = document.createElement("div");
-                wrapper.innerHTML = `<div><p>${ message }</p><hr/><div align= "right">${ message_owner }<br/>${ today.toLocaleString() }</div></div>`;
-                element.appendChild(wrapper);
+                let avatarImgTag = document.createElement('img');
+
+                avatarImgTag.src = '{{ user.profile.image.url }}';
+                avatarImgTag.alt = 'avatar';
+                avatarImgTag.width = '60';
+
+                avatarImgTag.classList.add(
+                    'rounded-circle',
+                    'd-flex',
+                    'align-self-start',
+                    'me-3',
+                    'shadow-1-strong'
+                );
+
+                liElement.appendChild(avatarImgTag);
+                liElement.appendChild(cardDiv);
             }
 
-            this.chat_messages_tag.appendChild(element);
+            this.chat_messages_tag.appendChild(liElement);
             this.chat_messages_tag.scrollTop = this.chat_messages_tag.scrollHeight;
         },
 
@@ -235,13 +310,6 @@
             const modal = new bootstrap.Modal(modal_ele);
             modal.show();
         },
-
-        myFunction() {
-            $('#submit').click(function() {
-                var name = prompt("Please enter your name", "");
-                $.post('/url/to/django/handler', {'name': name});
-            });
-        }
     };
 
 handlers.init();

@@ -24,6 +24,30 @@
         text-align: left;
         margin-right: 1rem;
     }
+    .chat-message.owner {
+        justify-content: flex-end;
+        margin-right: 0.5rem;
+    }
+    .chat-message.other {
+        justify-content: flex-start;
+    }
+    .card.w-100 {
+        max-width: 50%;
+    }
+    #chat_messages::-webkit-scrollbar {
+        width:.5em;
+        opacity:.3
+     }
+    #chat_messages::-webkit-scrollbar-track {
+        -webkit-box-shadow:none
+    }
+    #chat_messages::-webkit-scrollbar-thumb {
+        background-color:#C0C0C0
+    }
+    ul.list-unstyled li:hover {
+        background-color:#f2f2f2;
+        cursor:pointer
+    }
 </style>
 {% endblock %}
 
@@ -32,15 +56,15 @@
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0" style="height: 750px;">
-                <div class="card" style="height: 650px; margin-top: 3rem; overflow-y: auto;">
+                <div class="card" style="height: 650px; margin-top: 3rem; overflow-y: auto; border: none;">
                     <div class="card-body">
                         {% for room in my_rooms %}
                             {% if room.user1 == request.user %}
                                 <ul class="list-unstyled mb-0">
-                                <li class="p-2 border-bottom" style="background-color: #eee; margin-bottom: 0.5rem;">
+                                <li class="p-2 border-bottom" style="margin-bottom: 0.5rem;">
                                     <a href="{% url 'chatapp:private_room' room.pk %}" class="d-flex justify-content-between text-decoration-none text-dark">
                                         <div class="d-flex flex-row">
-                                        <img src="#" alt="{{ room.user2.username }}'s avatar"
+                                        <img src="{{ room.user2.profile.image.url }}" alt="{{ room.user2.username }}'s avatar"
                                                 class ="rounded-circle d-flex align-self-center me-3 shadow-sm" width = "60">
                                             <div class="pt-1">
                                                 <p class="fw-bold mb-0">{{ room.user2.username }}</p>
@@ -52,10 +76,10 @@
                                 </ul>
                             {% else %}
                                 <ul class="list-unstyled mb-0">
-                                <li class="p-2 border-bottom" style="background-color: #eee; margin-bottom: 0.5rem;">
+                                <li class="p-2 border-bottom" style="margin-bottom: 0.5rem;">
                                     <a href="{% url 'chatapp:private_room' room.pk %}" class="d-flex justify-content-between text-decoration-none text-dark">
                                         <div class="d-flex flex-row">
-                                        <img src="#" alt="{{ room.user1.username }}'s avatar"
+                                        <img src="{{ room.user1.profile.image.url }}" alt="{{ room.user1.username }}'s avatar"
                                                 class ="rounded-circle d-flex align-self-center me-3 shadow-sm" width = "60">
                                             <div class="pt-1">
                                                 <p class="fw-bold mb-0">{{ room.user1.username }}</p>
@@ -74,14 +98,11 @@
             </div>
 
             <div class="col-md-6 col-lg-7 col-xl-8" style="margin-top: 3rem; height: 650px;">
-                <div class="card" style="height: 650px;">
-                    <div class="card-header">
-                            받는 사람: {{ other_user.username  }}
-                    </div>
+                <div class="card border-0" style="height: 650px; background-color: #eee">
                     <div class="card-body overflow-hidden">
                         <div id="chat_messages" class="w-100 h-100 border-0 overflow-scroll"></div>
                     </div>
-                    <div class="card-footer" style="display: flex; align-items: center;">
+                    <div class="card-footer border-0" style="display: flex; align-items: center; background-color: #eee">
                         <form id="message_form" style="flex-grow: 1;">
                             <input type="text" name="message" class="form-control" required placeholder="메세지를 입력하세요." autofocus autocomplete="off" />
                         </form>
@@ -172,25 +193,90 @@
         append_message(message, message_owner) {
             let today = new Date();
 
-            const element = document.createElement("div");
-            element.className = "chat-message";
+            const liElement = document.createElement("li");
+            liElement.className = "d-flex mb-4 chat-message";
 
             if (message_owner === "{{ user.username }}") {
-                element.className += " " + "message_owner";
+                liElement.classList.add('owner');
+            } else if (message_owner !== undefined) {
+                liElement.classList.add('other');
             }
 
-            if (message_owner === undefined) {
-                const wrapper = document.createElement("div");
-                wrapper.textContent = message;
-                element.appendChild(wrapper);
+            const cardDiv = document.createElement("div");
+            cardDiv.className = "card w-100";
+
+            const headerDiv = document.createElement("div");
+            headerDiv.className = "card-header d-flex justify-content-between p-3";
+
+            const namePtag = document.createElement("p");
+            namePtag.className = "fw-bold mb-0";
+            namePtag.textContent = message_owner;
+
+            const timePtag = document.createElement('p');
+            timePtag.className = "text-muted small mb-0";
+            timePtag.innerHTML = `<i class="far fa-clock"></i> ${today.toLocaleString()}`;
+
+            headerDiv.appendChild(namePtag);
+            headerDiv.appendChild(timePtag);
+
+            const bodyDiv = document.createElement('div');
+            bodyDiv.className = "card-body";
+
+            const msgPTag = document.createElement('p');
+            msgPTag.className = "mb-0";
+            msgPTag.textContent = message;
+
+            bodyDiv.appendChild(msgPTag);
+            cardDiv.appendChild(headerDiv);
+            cardDiv.appendChild(bodyDiv);
+
+            if (message_owner === "{{ user.username }}") {
+                liElement.appendChild(cardDiv);
+
+                let avatarImgTag = document.createElement('img');
+                avatarImgTag.src = "{{ request.user.profile.image.url }}";
+                avatarImgTag.alt = 'avatar';
+                avatarImgTag.width = '60';
+
+                avatarImgTag.classList.add(
+                    'rounded-circle',
+                    'd-flex',
+                    'align-self-start',
+                    'ms-3',
+                    'shadow-1-strong'
+                );
+
+                liElement.appendChild(avatarImgTag);
             } else {
-                const wrapper = document.createElement("div");
-                wrapper.innerHTML = `<div><p>${ message }</p><hr/><div align= "right">${ message_owner }<br/>${ today.toLocaleString() }</div></div>`;
-                element.appendChild(wrapper);
+                let avatarImgTag = document.createElement('img');
+
+                let avatarUrl = '';
+
+                if ("{{ rooms.user2 }}" === "{{ request.user }}") {
+                    avatarUrl = "{{ rooms.user1.profile.image.url }}";
+                } else {
+                    avatarUrl = "{{ rooms.user2.profile.image.url }}";
+                }
+
+               avatarImgTag.src = avatarUrl;
+               avatarImgTag.alt = 'avatar';
+               avatarImgTag.width = '60';
+
+               avatarImgTag.classList.add(
+                   'rounded-circle',
+                   'd-flex',
+                   'align-self-start',
+                   "me-3",
+                   "shadow-1-strong"
+               );
+
+               liElement.appendChild(avatarImgTag);
+               liElement.appendChild(cardDiv);
             }
 
-            this.chat_messages_tag.appendChild(element);
+            this.chat_messages_tag.appendChild(liElement);
             this.chat_messages_tag.scrollTop = this.chat_messages_tag.scrollHeight;
+
         },
 
         onsubmit(event) {

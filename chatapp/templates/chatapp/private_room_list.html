@@ -1,6 +1,12 @@
 {% extends "chatapp/templates/base.html" %}
 
 {% block content %}
+<style>
+    ul.list-unstyled li:hover {
+        background-color:#f2f2f2;
+        cursor:pointer
+    }
+</style>
 <section style="background-color: #eee;">
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -10,10 +16,10 @@
                         <ul class="list-unstyled mb-0">
                             {% for room in my_rooms %}
                                 {% if room.user1 == request.user %}
-                                    <li class="p-2 border-bottom" style="background-color: #eee; margin-bottom: 0.5rem;">
+                                    <li class="p-2 border-bottom" style="margin-bottom: 0.5rem;">
                                         <a href="{% url 'chatapp:private_room' room.pk %}" class="d-flex justify-content-between text-decoration-none text-dark">
                                             <div class="d-flex flex-row">
-                                            <img src="#" alt="{{ room.user2.username }}'s avatar"
+                                            <img src="{{ room.user2.profile.image.url }}" alt="{{ room.user2.username }}'s avatar"
                                                 class ="rounded-circle d-flex align-self-center me-3 shadow-sm" width = "60">
                                                 <div class="pt-1">
                                                 <p class="fw-bold mb-0">{{ room.user2.username }}</p>
@@ -23,10 +29,10 @@
                                         </a>
                                     </li>
                                 {% else %}
-                                    <li class="p-2 border-bottom" style="background-color: #eee; margin-bottom: 0.5rem;">
+                                    <li class="p-2 border-bottom" style="margin-bottom: 0.5rem;">
                                         <a href="{% url 'chatapp:private_room' room.pk %}" class="d-flex justify-content-between text-decoration-none text-dark">
                                             <div class="d-flex flex-row">
-                                            <img src="#" alt="{{ room.user2.username }}'s avatar"
+                                            <img src="{{ room.user1.profile.image.url }}" alt="{{ room.user2.username }}'s avatar"
                                                 class ="rounded-circle d-flex align-self-center me-3 shadow-sm" width = "60">
                                                 <div class="pt-1">
                                                 <p class="fw-bold mb-0">{{ room.user1.username }}</p>

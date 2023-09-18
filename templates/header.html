@@ -14,45 +14,45 @@
 
 <nav class="navbar navbar-expand-sm bg-light">
     <div class="container-fluid">
-        <a href="/" class="navbar-brand">HOME</a>
+        <a href="/" class="navbar-brand">Groups</a>
 
-    <div class="collapse navbar-collapse">
-        <form method="get" class="d-flex" role="search" action="{% url 'searchapp:user_search_list' %}">
-            <input class="form-control me-2" type="text" placeholder="Search" aria-label="Search" name="q" value="{{ request.GET.q }}">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-    </div>
+        <div class="collapse navbar-collapse">
+            <form method="get" class="d-flex" role="search" action="{% url 'searchapp:user_search_list' %}">
+                <input class="form-control me-2" type="text" placeholder="Search" aria-label="Search" name="q" value="{{ request.GET.q }}">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            &nbsp; &nbsp;
+            <a href="/">
+                <i class="bi bi-instagram" style="font-size: 30px;"></i>
+            </a>
+            &nbsp; &nbsp;
+            <a href="{% url 'chatapp:index' %}">
+                <i class="bi bi-chat" style="font-size: 30px;"></i>
+            </a>
+        </div>
 
-    {% if user.is_authenticated %}
-        <a href="{% url 'chatapp:my_private_rooms' %}">
-            <i class="bi bi-telegram" style="font-size: 30px;"></i>
-        </a>
-        &nbsp; &nbsp;
-        <a href="{% url 'chatapp:index' %}">
-            <span>Chat</span>
-        </a>
-        &nbsp; &nbsp;
-        <a href="{% url 'accountapp:detail' pk=user.pk %}">
-            <span>{{ user }}님 환영합니다</span>
-        </a>
-        &nbsp; &nbsp;
-        <a href="{% url 'accountapp:logout' %}">
-            <span>로그아웃</span>
-        </a>
-        &nbsp;
-    {% else %}
-        <a href="{% url 'chatapp:index' %}">
-            <span>Chat</span>
-        </a>
-        &nbsp; &nbsp;
-        <a href="{% url 'accountapp:signup' %}">
-            <span>회원가입</span>
-        </a>
-        &nbsp; &nbsp;
-        <a href="{% url 'accountapp:login' %}">
-            <span>로그인</span>
-        </a>
-        &nbsp;
-    {% endif %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'chatapp:my_private_rooms' %}">
+                <i class="bi bi-telegram" style="font-size: 30px;"></i>
+            </a>
+            &nbsp; &nbsp;
+            <a href="{% url 'accountapp:detail' pk=user.pk %}">
+                <span>{{ user }}님 환영합니다</span>
+            </a>
+            &nbsp; &nbsp;
+            <a href="{% url 'accountapp:logout' %}">
+                <span>로그아웃</span>
+            </a>
+            &nbsp;
+        {% else %}
+            <a href="{% url 'accountapp:signup' %}">
+                <span>회원가입</span>
+            </a>
+            &nbsp; &nbsp;
+            <a href="{% url 'accountapp:login' %}">
+                <span>로그인</span>
+            </a>
+            &nbsp;
+        {% endif %}
     </div>
 </nav>
