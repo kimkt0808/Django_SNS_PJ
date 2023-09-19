@@ -1,4 +1,6 @@
 {% extends "chatapp/templates/base.html" %}
+{% load static %}
+
 
 {% block extra-style %}
 <style>
@@ -233,7 +235,13 @@
                 liElement.appendChild(cardDiv);
 
                 let avatarImgTag = document.createElement('img');
-                avatarImgTag.src = '{{ user.profile.image.url }}';
+
+                {% if user.profile and user.profile.image %}
+                    avatarImgTag.src = '{{ user.profile.image.url }}';
+                {% else %}
+                    avatarImgTag.src = '{% static "DI.PNG" %}';
+                {% endif %}
+
                 avatarImgTag.alt = 'avatar';
                 avatarImgTag.width = '60';
 
@@ -249,7 +257,12 @@
             } else {
                 let avatarImgTag = document.createElement('img');
 
-                avatarImgTag.src = '{{ user.profile.image.url }}';
+                {% if user.profile and user.profile.image %}
+                    avatarImgTag.src = '{{ user.profile.image.url }}';
+                {% else %}
+                    avatarImgTag.src = '{% static "DI.PNG" %}';
+                {% endif %}
+
                 avatarImgTag.alt = 'avatar';
                 avatarImgTag.width = '60';
 
