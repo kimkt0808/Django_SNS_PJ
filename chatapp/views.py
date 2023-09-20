@@ -13,11 +13,15 @@ from chatapp.models import Room, PrivateRoom
 
 
 def index(request):
-    room_list = Room.objects.all()
+    sort = request.GET.get('sort', None)
+    if sort == "mychat":
+        room_list = Room.objects.filter(user=request.user).order_by('-created_at')
+    else:
+        room_list = Room.objects.all().order_by('-created_at')
 
     return render(request, "chatapp/index.html", {
-        "room_list": room_list,
-    })
+            "room_list": room_list,
+        })
 
 
 class RoomCreateView(CreateView):

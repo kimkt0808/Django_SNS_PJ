@@ -61,10 +61,11 @@ class Room(OnlineUserMixin, models.Model):
 
     name = models.CharField(max_length=20)
     password = models.CharField(max_length=128)
-    description = models.TextField(max_length=200, null=True)
+    description = models.TextField(max_length=30, null=True)
+    image = models.ImageField(upload_to="room_images/", blank=False)
 
     is_password_set = models.BooleanField(default=False, blank=True)
-    # category
+    created_at = models.DateField(auto_now_add=True, null=True)
 
     class Meta:
         ordering = ["-pk"]
