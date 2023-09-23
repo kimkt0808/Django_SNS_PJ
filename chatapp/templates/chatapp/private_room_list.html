@@ -17,6 +17,7 @@
                         <ul class="list-unstyled mb-0">
                             {% for room in my_rooms %}
                                 {% if room.user1 == request.user %}
+                                    {% with room.last_message as last_message %}
                                     <li class="p-2 border-bottom" style="margin-bottom: 0.5rem;">
                                         <a href="{% url 'chatapp:private_room' room.pk %}" class="d-flex justify-content-between text-decoration-none text-dark">
                                             <div class="d-flex flex-row">
@@ -27,14 +28,20 @@
                                                 <img src="{% static 'DI.PNG' %}" alt="{{ room.user2.username }}'s avatar"
                                                     class ="rounded-circle d-flex align-self-center me-3 shadow-sm" width = "60">
                                             {% endif %}
-                                                <div class="pt-1">
-                                                <p class="fw-bold mb-0">{{ room.user2.username }}</p>
-                                                <p class="small text-muted">Hello, Are you there?</p>
-                                            </div>
+                                                <div>
+                                                    <p><strong>{{ room.user2.username }}</strong></p>
+                                                    {% if last_message %}
+                                                        <small>{{ last_message.content | truncatechars:10 }}</small>
+                                                    {% else %}
+                                                        <small>메시지 없음</small>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </a>
                                     </li>
+                                    {% endwith %}
                                 {% else %}
+                                    {% with room.last_message as last_message %}
                                     <li class="p-2 border-bottom" style="margin-bottom: 0.5rem;">
                                         <a href="{% url 'chatapp:private_room' room.pk %}" class="d-flex justify-content-between text-decoration-none text-dark">
                                             <div class="d-flex flex-row">
@@ -45,13 +52,18 @@
                                                 <img src="{% static 'DI.PNG' %}" alt="{{ room.user1.username }}'s avatar"
                                                     class ="rounded-circle d-flex align-self-center me-3 shadow-sm" width = "60">
                                             {% endif %}
-                                                <div class="pt-1">
-                                                <p class="fw-bold mb-0">{{ room.user1.username }}</p>
-                                                <p class="small text-muted">Hello, Are you there?</p>
-                                            </div>
+                                                <div class="notification-icon">
+                                                    <p><strong>{{ room.user1.username }}</strong></p>
+                                                    {% if last_message %}
+                                                        <small>{{ last_message.content | truncatechars:10 }}</small>
+                                                    {% else %}
+                                                        <small>메시지 없음</small>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </a>
                                     </li>
+                                    {% endwith %}
                                 {% endif %}
                             {% empty %}
                                 참여한 개인 채팅방이 없습니다.
@@ -60,8 +72,23 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra-script %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var csrftoken = '{{ csrf_token }}';
+
+        $(".notification-icon").click(function() {
+            $.post("{% url 'chatapp:mark_notifications_read' %}", {csrfmiddlewaretoken: csrftoken}, function(data) {
+                $(".badge.bg-danger").text('');
+            });
+        });
+    });
+</script>
 {% endblock %}

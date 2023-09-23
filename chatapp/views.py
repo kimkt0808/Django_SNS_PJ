@@ -1,12 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.http import urlencode
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView
+from notifications.models import Notification
+from notifications.signals import notify
 
 from chatapp.forms import RoomForm, PasswordForm
 from chatapp.models import Room, PrivateRoom
@@ -108,6 +110,10 @@ class PrivateRoomCreateView(View):
             room = PrivateRoom(user1=request.user, user2=user2)
             room.save()
 
+            notify.send(request.user, recipient=user2,
+                        verb="created a private chat with you.",
+                        decription=f"Chat in {room.chat_group_name}")
+
         return redirect(reverse("chatapp:private_room", kwargs={"pk": room.pk}))
 
 
@@ -146,3 +152,10 @@ class PrivateRoomListView(ListView):
 
     def get_queryset(self):
         return PrivateRoom.objects.filter(Q(user1=self.request.user) | Q(user2=self.request.user))
+
+
+class MarkNotificationsReadView(View):
+    def post(self, request):
+        Notification.objects.filter(recipient=request.user).mark_all_as_read()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

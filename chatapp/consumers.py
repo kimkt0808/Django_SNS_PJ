@@ -1,7 +1,7 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
-from chatapp.models import Room, PrivateRoom
+from chatapp.models import Room, PrivateRoom, PrivateRoomMessage
 
 
 class ChatConsumer(JsonWebsocketConsumer):
@@ -141,10 +141,12 @@ class PrivateRoomChatConsumer(JsonWebsocketConsumer):
 
         try:
             self.private_room = PrivateRoom.objects.get(pk=room_pk)
+
             if user != self.private_room.user1 and user != self.private_room.user2:
                 raise PermissionError("User not allowed in this room.")
             else:
                 self.group_name = self.private_room.chat_group_name
+                messages = PrivateRoomMessage.objects.filter(room=self.private_room).order_by("-created_at")[:10]
 
                 async_to_sync(self.channel_layer.group_add)(
                     self.group_name,
@@ -152,6 +154,13 @@ class PrivateRoomChatConsumer(JsonWebsocketConsumer):
                 )
 
                 self.accept()
+
+                for message in reversed(messages):
+                    self.send_json({
+                        "type": "chat.message",
+                        "message": message.content,
+                        "message_owner": str(message.sender),
+                    })
 
         except (PrivateRoom.DoesNotExist, PermissionError) as e:
             print(f"Connection rejected. Reason: {e}")
@@ -174,15 +183,20 @@ class PrivateRoomChatConsumer(JsonWebsocketConsumer):
         _type = content["type"]
 
         if _type == "chat.message":
-            message_owner = user.username
             message = content["message"]
+
+            message = PrivateRoomMessage.objects.create(
+                room=self.private_room,
+                sender=user,
+                content=message,
+            )
 
             async_to_sync(self.channel_layer.group_send)(
                 self.group_name,
                 {
                     "type": "chat.message",
-                    "message": message,
-                    "message_owner": message_owner,
+                    "message": message.content,
+                    "message_owner": str(message.sender),
                 }
             )
         else:

@@ -3,7 +3,8 @@ from channels.layers import get_channel_layer
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, post_save
+from notifications.signals import notify
 
 from config.convert_json import JSONEncoder, JSONDecoder
 
@@ -126,3 +127,28 @@ class PrivateRoom(models.Model):
     @staticmethod
     def make_chat_group_name(room=None, room_pk=None):
         return "chat-%s" % (room_pk or room.pk)
+
+    def last_message(self):
+        return self.messages.order_by('-created_at').first()
+
+
+class PrivateRoomMessage(models.Model):
+    room = models.ForeignKey(PrivateRoom, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+
+def send_notification(sender, instance=None, created=False, **kwargs):
+    if created:
+        recipient = instance.room.user1 if instance.sender != instance.room.user1 else instance.room.user2
+        notify.send(instance.sender,
+                    recipient=recipient,
+                    verb="sent you a message.",
+                    description=f"Message in {instance.room.chat_group_name}: {instance.content}")
+
+
+post_save.connect(send_notification, sender=PrivateRoomMessage)

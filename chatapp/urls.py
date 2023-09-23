@@ -3,7 +3,7 @@ from django.urls import path
 
 from chatapp import views
 from chatapp.views import RoomCreateView, RoomDeleteView, RoomDetailView, RoomUserListView, PrivateRoomListView, \
-    PrivateRoomDetailView, PrivateRoomCreateView
+    PrivateRoomDetailView, PrivateRoomCreateView, MarkNotificationsReadView
 
 app_name = "chatapp"
 
@@ -21,6 +21,10 @@ urlpatterns = [
     # Private Room
     # create, detail, list
     path("private_room/create/<str:username>/", login_required(PrivateRoomCreateView.as_view()), name="private_room_create"),
-    path('<int:pk>/private_room/', login_required(PrivateRoomDetailView.as_view()), name='private_room'),
+    path('<int:pk>/private_room/', login_required(PrivateRoomDetailView.as_view()), name="private_room"),
     path("my_private_rooms/", login_required(PrivateRoomListView.as_view()), name="my_private_rooms"),
+
+    # Private Room
+    # notifications
+    path('notifications/read/', MarkNotificationsReadView.as_view(), name="mark_notifications_read"),
 ]

@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     # channels
     "channels",
     "daphne",
+    "notifications",
 
     "django.contrib.admin",
     "django.contrib.auth",
@@ -81,6 +82,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+
+                # context processors
+                "config.context_processors.notifications",
             ],
         },
     },
