@@ -12,7 +12,7 @@
                             <img class="card-img-top" src="{{ room.image.url }}" style="height: 225px; width: 100%; display: block; object-fit: cover;">
                             <div class="card-body">
                                     {% if room.is_password_set %}
-                                        <h5><a href="#" class="room-name-link" data-room-id="{{ room.pk }}">{{ room.name }}</a></h5>
+                                        <h5><a href="#" class="room-name-link" data-room-id="{{ room.pk }}"><i class="bi bi-lock-fill"></i> {{ room.name }}</a></h5>
                                         <div class="password-form mt-3 mt-lg-0 d-none" data-room-id="{{ room.pk }}">
                                             <form method="POST" action="{% url 'chatapp:room' room.pk %}" class="d-flex mt-3 mt-lg-0">
                                                 <input type="hidden" name="origin" value="room_search_list">
@@ -28,7 +28,7 @@
                                             </form>
                                         </div>
                                     {% else %}
-                                        <h5><a href="{% url 'chatapp:room' room.pk %}">{{ room.name }}</a></h5>
+                                        <h5><a href="{% url 'chatapp:room' room.pk %}"><i class="bi bi-unlock-fill"></i> {{ room.name }}</a></h5>
                                     {% endif %}
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">

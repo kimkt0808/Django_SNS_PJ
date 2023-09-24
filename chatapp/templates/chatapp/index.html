@@ -3,6 +3,26 @@
 {# TODO: 채팅방 목록 보여주기 #}
 
 {% block content %}
+<style>
+    #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        border: none;
+        outline: none;
+        background-color: #1E90FF;
+        color: white;
+        cursor: pointer;
+        border-radius: 30%;
+        padding: 10px 10px;
+    }
+    #myBtn:hover {
+       background-color:#555;
+    }
+</style>
+
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
 
     <div style="text-align: center; margin-top: 3rem;">
@@ -39,7 +59,7 @@
                         <div class="card-body">
                             <p class="card-text">
                                 {% if room.is_password_set %}
-                                    <h5><a href="#" class="room-name-link" data-room-id="{{ room.pk }}">{{ room.name }}</a></h5>
+                                    <h5><a href="#" class="room-name-link" data-room-id="{{ room.pk }}"><i class="bi bi-lock-fill"></i> {{ room.name }}</a></h5>
                                     <div class="password-form mt-3 mt-lg-0 d-none" data-room-id="{{ room.pk }}">
                                         <form method="POST" action="{% url 'chatapp:room' room.pk %}" class="d-flex mt-3 mt-lg-0">
                                             <input type="hidden" name="origin" value="index">
@@ -55,7 +75,7 @@
                                         </form>
                                     </div>
                                 {% else %}
-                                    <h5><a href="{% url 'chatapp:room' room.pk %}">{{ room.name }}</a></h5>
+                                    <h5><a href="{% url 'chatapp:room' room.pk %}"><i class="bi bi-unlock-fill"></i> {{ room.name }}</a></h5>
                                 {% endif %}
                             </p>
                             <div class="d-flex justify-content-between align-items-center">
@@ -72,6 +92,8 @@
         </div>
     </div>
     <script src="/static/js/magicgrid.js"></script>
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 {% endblock %}
 
 {% block extra-script %}
@@ -99,5 +121,20 @@
         });
     });
 
+    var mybutton = document.getElementById("myBtn");
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+         mybutton.style.display = "block";
+       } else {
+         mybutton.style.display = "none";
+       }
+    }
+
+    function topFunction() {
+       document.body.scrollTop = 0;
+       document.documentElement.scrollTop = 0;
+    }
 </script>
 {% endblock %}
