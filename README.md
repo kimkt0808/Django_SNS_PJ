@@ -131,7 +131,8 @@ Django_SNS_PJ는 사용자들이 실시간으로 정보를 공유하고 소통�
 <img width="400" alt="profile_update" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5104bccc-c4e6-410e-beae-fe9ecf222040">
 
 ### 6. 검색
-<img width="700" alt="search_ui" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/0c8525c0-ccf9-4e84-8683-750b94d00cd9">
+<img width="870" alt="search_user" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/b559fdfc-d8a7-44e5-9e5d-2f1d60ed7b8a">
+<img width="972" alt="search_chat" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/1c021da5-6d8e-4923-ac15-05ef396afcb1">
 
 ### 7. 채팅(Public)
 <img width="1279" alt="채팅메인" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/97d9a4f9-5b14-4a85-a23f-e1eb02964cb9">
