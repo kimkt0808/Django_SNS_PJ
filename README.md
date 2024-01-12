@@ -119,7 +119,7 @@ Django_SNS_PJ는 사용자들이 실시간으로 정보를 공유하고 소통�
 <img width="800" alt="home" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/3a68f3cc-6bbd-4347-9010-da7446c5eaf9">
 
 ### 2. 로그인
-<img width="500" height="600" alt="login" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5181fc68-c07c-4cf4-bea4-af991b64b6a3">
+<img width="1280" alt="login" src="https://github.com/8e9atient/Django_SNS_PJ/assets/130894141/ef758128-bff4-449b-aa97-a340bb71a4cf">
 
 ### 3. 피드
 <img width="846" alt="feed_detail" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/c021b8dc-6b4c-4ab5-be98-616aac40b28d">
@@ -132,15 +132,15 @@ Django_SNS_PJ는 사용자들이 실시간으로 정보를 공유하고 소통�
 
 ### 6. 검색
 <img width="870" alt="search_user" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/b559fdfc-d8a7-44e5-9e5d-2f1d60ed7b8a">
-<img width="972" alt="search_chat" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/1c021da5-6d8e-4923-ac15-05ef396afcb1">
+<img width="970" alt="search_chat" src="https://github.com/8e9atient/Django_SNS_PJ/assets/130894141/6445f56e-288d-422b-9b0d-50fd4f134467">
 
 ### 7. 채팅(Public)
-<img width="1279" alt="채팅메인" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/97d9a4f9-5b14-4a85-a23f-e1eb02964cb9">
-<img width="1012" alt="채팅방생성" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5b6bb9d6-c9bc-4d08-982d-119412c03388">
-<img width="1001" alt="채팅방상세" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/b0251dd8-9821-4c63-b005-757868e19fc4">
+<img width="1280" alt="chat_main" src="https://github.com/8e9atient/Django_SNS_PJ/assets/130894141/6aa38dba-2d54-459b-b239-c91c5fb41243">
+<img width="1012" alt="chat_create" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5b6bb9d6-c9bc-4d08-982d-119412c03388">
+<img width="1001" alt="chat_detail" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/b0251dd8-9821-4c63-b005-757868e19fc4">
 
 ### 8. 채팅(Private)
-<img width="1000" alt="디엠상세" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5d1e9eb6-a09f-40b0-bc08-4647fe5e0729">
+<img width="1000" alt="dm_detail" src="https://github.com/8azelnut/Django_SNS_PJ/assets/130894141/5d1e9eb6-a09f-40b0-bc08-4647fe5e0729">
 
 <br>
 
